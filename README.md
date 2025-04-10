@@ -32,6 +32,10 @@ Install Dependencies:
 ```php
 composer install
 ```
+Generate Key for project
+```php
+php artisan key:generate
+```
 
 2. Set up the database:
  - Create a MySQL database.
