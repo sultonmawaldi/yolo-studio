@@ -32,6 +32,9 @@ Install Dependencies:
 ```php
 composer install
 ```
+Setting Up Environment File
+##### Rename .env.example to .env in the main directory. This file holds your app’s environment settings like database and API keys.
+
 Generate Key for project
 ```php
 php artisan key:generate
