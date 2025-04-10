@@ -13,50 +13,7 @@ use Hash;
 use Session;
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    // public function index(Request $request)
-    // {
-    //     // Get the role type from the request (either 'employee', 'customer', or 'moderator')
-    //     $role = $request->get('role');
 
-    //     // Get the ID of the logged-in user
-    //     $loggedInUserId = auth()->id();
-
-    //     // If 'employee' is selected, filter users by employee role
-    //     if ($role == 'employee') {
-    //         $users = User::role('employee')
-    //             ->where('id', '!=', $loggedInUserId)  // Exclude the logged-in user
-    //             ->latest()
-    //             ->get();
-    //     }
-    //     // If 'customer' is selected, filter users by subscriber role
-    //     elseif ($role == 'customer') {
-    //         $users = User::role('subscriber')
-    //             ->where('id', '!=', $loggedInUserId)  // Exclude the logged-in user
-    //             ->latest()
-    //             ->get();
-    //     }
-    //     // If 'moderator' is selected, filter users by moderator role
-    //     elseif ($role == 'moderator') {
-    //         $users = User::role('moderator')
-    //             ->where('id', '!=', $loggedInUserId)  // Exclude the logged-in user
-    //             ->latest()
-    //             ->get();
-    //     }
-    //     // Default: show all users except admin
-    //     else {
-    //         $users = User::whereDoesntHave('roles', function($query) {
-    //                 $query->where('name', 'admin');
-    //             })
-    //             ->where('id', '!=', $loggedInUserId)  // Exclude the logged-in user
-    //             ->latest()
-    //             ->get();
-    //     }
-
-    //     return view('backend.user.index', compact('users'));
-    // }
 
     public function index(Request $request)
     {
@@ -64,8 +21,6 @@ class UserController extends Controller
         $users = User::latest()->get();
         return view('backend.user.index', compact('users'));
     }
-
-
 
 
     /**
@@ -378,15 +333,21 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user)
+    public function destroy(User $user, Request $request)
     {
-        if($user->id === $requst->user->id)
+        if($user->id == 1)
         {
-            return back()->withErrors('You cannot delete your self chutiya!');
+            return back()->withErrors('First admin user cannot be deleted.');
         }
+
+        if ($user->id === $request->user()->id) {
+            return back()->withErrors('You cannot delete yourself.');
+        }
+
         $user->delete();
-        return redirect()->back()->withSuccess('User has been successfully trashed!');
+        return redirect()->back()->with('success', 'User has been successfully trashed!');
     }
+
 
     public function trashView(Request $request)
     {
@@ -410,6 +371,18 @@ class UserController extends Controller
         // Retrieve the trashed user with its associated employee, holidays, appointments, and bookings
         $user = User::withTrashed()->findOrFail($id);
 
+        //for employee
+        if($user->employee->appointments->count())
+        {
+            return back()->withErrors('User cannot be deleted permanently, already engaged in existing bookings!');
+        }
+
+        //for user
+        if($user->appointments->count())
+        {
+            return back()->withErrors('User cannot be deleted permanently, already engaged in existing bookings!');
+        }
+
         // Check if the user has an associated employee
         if ($user->employee) {
             // Delete all holidays related to the employee
@@ -431,12 +404,6 @@ class UserController extends Controller
             // Finally, delete the employee data
             $user->employee->forceDelete();
         }
-
-        // Check if the user has any bookings
-        // foreach ($user->bookings as $booking) {
-        //     $booking->forceDelete(); // Force delete each booking
-        // }
-
 
         // Delete the user's profile image if exists
         if ($user->image) {

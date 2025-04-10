@@ -67,7 +67,7 @@
                                             Status
                                         </th>
 
-                                        <th style="width: 12%">
+                                        <th style="width: 5%">
                                             Action
                                         </th>
                                     </tr>
@@ -106,14 +106,7 @@
                                                 @endif
                                             </td>
                                             <td class="project-actions text-right d-flex justify-content-between">
-                                                <div>
-                                                    <a target="_blank" class="btn btn-primary btn-sm"
-                                                        href="">
-                                                        <i class="fas fa-folder">
-                                                        </i>
-                                                        View
-                                                    </a>
-                                                </div>
+
                                                 <div>
                                                     <a class="btn btn-info btn-sm"
                                                         href="{{ route('user.edit', $user->id) }}">

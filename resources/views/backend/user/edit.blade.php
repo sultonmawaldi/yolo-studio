@@ -176,12 +176,8 @@
                                                 <input type="hidden" name="status" value="0">
 
                                                 {{-- Actual checkbox --}}
-                                                <input
-                                                    type="checkbox"
-                                                    class="custom-control-input"
-                                                    id="status"
-                                                    name="status"
-                                                    value="1"
+                                                <input type="checkbox" class="custom-control-input" id="status"
+                                                    name="status" value="1"
                                                     {{ old('status', $user->status) ? 'checked' : '' }}>
 
                                                 <label class="custom-control-label" for="status">Status</label>
@@ -227,7 +223,7 @@
                                             <small class="text-muted"> Link employees to services they are assigned
                                                 to</small>
 
-                                            <select class="form-control select2 @error('service[]') is-invalid @enderror"
+                                            <select class="form-control servicesSelect2 @error('service[]') is-invalid @enderror"
                                                 name="service[]" data-placeholder="Select Service" id="service"
                                                 multiple>
                                                 @foreach ($services as $service)
@@ -419,15 +415,15 @@
                                                 @forelse($holidaysToDisplay as $index => $holidayItem)
                                                     @php
                                                         // Determine if we're using old input or database data
-                                                    $usingOldInput = !empty($holidaysInput);
+$usingOldInput = !empty($holidaysInput);
 
-                                                    if ($usingOldInput) {
-                                                        $date = old("holidays.date.$index");
-                                                        $holiday = null;
-                                                    } else {
-                                                        $holiday = $holidayItem;
-                                                        $date = $holiday->date;
-                                                        // Format date for input field if it's not already in YYYY-MM-DD format
+if ($usingOldInput) {
+    $date = old("holidays.date.$index");
+    $holiday = null;
+} else {
+    $holiday = $holidayItem;
+    $date = $holiday->date;
+    // Format date for input field if it's not already in YYYY-MM-DD format
                                                             if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
                                                                 try {
                                                                     $date = \Carbon\Carbon::parse($date)->format(
@@ -538,6 +534,17 @@
                 allowClear: true,
                 search: true,
                 maximumSelectionLength: 1
+            });
+        });
+    </script>
+
+    <script>
+        // In your Javascript (external .js resource or <script> tag)
+        $(document).ready(function() {
+            $('.servicesSelect2').select2({
+                allowClear: true,
+                search: true,
+                //maximumSelectionLength: 1
             });
         });
     </script>

@@ -161,7 +161,7 @@
                                                 </td>
 
                                                 <td>
-                                                    {{ $appointment->service->title }}
+                                                    {{ $appointment->service->title ?? 'NA' }}
                                                 </td>
                                                 <td>
                                                     {{ $appointment->booking_date }}
@@ -184,7 +184,7 @@
                                                         data-toggle="modal" data-target="#appointmentModal"
                                                         data-id="{{ $appointment->id }}"
                                                         data-name="{{ $appointment->name }}"
-                                                        data-service="{{ $appointment->service->title }}"
+                                                        data-service="{{ $appointment->service->title ?? 'MA' }}"
                                                         data-email="{{ $appointment->email }}"
                                                         data-phone="{{ $appointment->phone }}"
                                                         data-employee="{{ $appointment->employee->user->name }}"

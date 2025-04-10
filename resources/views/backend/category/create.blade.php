@@ -97,7 +97,7 @@
                             </div>
                             <div class="card-body">
                                 <div class="form-group">
-                                    <textarea class="form-control" name="excerpt" id="" value="{{ old('excerpt') }}" cols="30" rows="5">{{ old('excerpt') }}</textarea>
+                                    <textarea class="form-control" name="body" id="" value="{{ old('body') }}" cols="30" rows="5">{{ old('excerpt') }}</textarea>
                                     @error('excerpt')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror

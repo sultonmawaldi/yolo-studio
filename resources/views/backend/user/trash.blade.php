@@ -104,7 +104,7 @@
                                             </td>
                                             <td class="project-actions text-right d-flex ">
                                                 <div>
-                                                    <a target="_blank" class="btn btn-primary btn-sm mr-2"
+                                                    <a onclick="return confirm('Are you sure you want to restore this user?')"  class="btn btn-primary btn-sm mr-2"
                                                         href="{{ route('user.restore', $user->id) }}">
                                                         <i class="fas fa-folder">
                                                         </i>

@@ -65,16 +65,13 @@
                                             <th style="width: 10%">
                                                 Category
                                             </th>
-                                            <th style="width: 10%">
+                                            {{-- <th style="width: 10%">
                                                 Featured
-                                            </th>
-                                            <th style="width: 10%">
-                                                Employees
-                                            </th>
+                                            </th> --}}
                                             <th style="width: 10%" class="text-center">
                                                 Status
                                             </th>
-                                            <th style="width: 18%">
+                                            <th style="width: 8%">
                                                 Action
                                             </th>
                                         </tr>
@@ -90,10 +87,6 @@
                                                     <a>
                                                         {{ $service->title }}
                                                     </a>
-                                                    <br>
-                                                    <small>
-                                                        {{ $service->created_at->diffForHumans() }}
-                                                    </small>
                                                 </td>
                                                 <td>
                                                     @if ($service->image)
@@ -110,16 +103,14 @@
 
                                                     {{ $service->category->title ?? 'NA' }}
                                                 </td>
-                                                <td>
+                                                {{-- <td>
                                                     @if ($service->featured)
                                                         Yes
                                                     @else
                                                         No
                                                     @endif
-                                                </td>
-                                                <td>
-                                                   Need to fix
-                                                </td>
+                                                </td> --}}
+
                                                 <td class="project-state">
                                                     @if ($service->status)
                                                         <span class="badge badge-success">Active</span>
@@ -128,14 +119,6 @@
                                                     @endif
                                                 </td>
                                                 <td class="project-actions text-right d-flex justify-content-between">
-                                                    <div>
-                                                        <a target="_blank" class="btn btn-primary btn-sm"
-                                                            href="">
-                                                            <i class="fas fa-folder">
-                                                            </i>
-                                                            View
-                                                        </a>
-                                                    </div>
                                                     <div>
                                                         <a class="btn btn-info btn-sm"
                                                             href="{{ route('service.edit', $service->id) }}">

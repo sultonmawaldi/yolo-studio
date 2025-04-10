@@ -68,7 +68,7 @@ class ServiceController extends Controller
         }
 
         Service::create($data);
-        return redirect()->route('service.index')->with('success','Service has beeen added successfully.');
+        return redirect()->route('service.index')->with('success','Service has been added successfully.');
     }
 
     /**
@@ -131,7 +131,7 @@ class ServiceController extends Controller
         }
 
         $service->update($data);
-        return redirect()->route('service.index')->withSuccess('Service has beeen updated successfully.');
+        return redirect()->route('service.index')->withSuccess('Service has been updated successfully.');
 
     }
 
@@ -139,10 +139,7 @@ class ServiceController extends Controller
 
     public function destroy(Service $service)
     {
-        // Check if the category has any services
-        if ($service->appointments->count() > 0) {
-            return redirect()->back()->withErrors('Cannot delete service with existing bookings.');
-        }
+
         $service->delete();
         return back()->withSuccess('Service Succesfully moved to trash!');
     }
@@ -163,21 +160,29 @@ class ServiceController extends Controller
         return redirect()->back()->with("success", "Data Restored Succesfully");
     }
 
-    public function force_delete(Request $request,$id)
+    public function force_delete(Request $request, $id)
     {
         $service = Service::withTrashed()->find($id);
-        if(!is_null($service)){
 
-           //remove image
-           //$destination = 'uploads/images/service/'.$service->image;
-           $destination = public_path('uploads/images/service/').$service->image;
-               if(\File::exists($destination))
-               {
-                   \File::delete($destination);
-               }
-           $service->forceDelete();
+         // Check if the category has any services
+         if ($service->appointments->count() > 0) {
+            return redirect()->back()->withErrors('Cannot deleted permanently, service with existing bookings.');
         }
+
+        if (!is_null($service)) {
+
+            // Remove image
+            $destination = public_path('uploads/images/service/') . $service->image;
+            if (\File::exists($destination)) {
+                \File::delete($destination);
+            }
+
+            $service->forceDelete();
+        }
+
         return redirect()->back()->with("success", "Data Deleted Permanently!!");
     }
+
+
 
 }

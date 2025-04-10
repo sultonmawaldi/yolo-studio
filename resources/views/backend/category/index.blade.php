@@ -69,9 +69,6 @@
                                     <th style="width: 15%">
                                         Service Count
                                     </th>
-                                    <th style="width: 15%">
-                                        Featured
-                                    </th>
                                     <th style="width: 7%">
                                         Status
                                     </th>
@@ -98,10 +95,6 @@
                                         </td> --}}
                                         <td>
                                             {{ $category->services->count() }}
-                                        </td>
-
-                                        <td>
-                                            {{ $category->featured ? 'Yes' : 'No' }}
                                         </td>
                                         <td>
                                             @if ($category->status)
