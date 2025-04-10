@@ -28,6 +28,10 @@ git clone https://github.com/vfixtechnology/appointment-booking-system.git
 ```php
 cd appointment-booking-system
 ```
+Install Dependencies:
+```php
+composer install
+```
 
 2. Set up the database:
  - Create a MySQL database.
