@@ -15,9 +15,8 @@ use App\Http\Controllers\DashboardController;
 
 use Illuminate\Http\Request;
 
-Route::middleware(['web', 'throttle:2,1'])->group(function () {
-    Auth::routes();
-});
+
+Auth::routes();
 
 Route::get('/',[FrontendController::class,'index'])->name('home');
 
