@@ -81,7 +81,9 @@ Now, open http://localhost:8000 in your browser to access the system.
 
 ## Admin login credentials:
 link: http://localhost:8000/login
+
 user: admin@example.com
+
 pass: admin123
 
 
