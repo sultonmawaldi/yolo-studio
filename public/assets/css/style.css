@@ -1,6 +1,5 @@
-
 :root {
-    --primary-color: #4e73df;
+    --primary-color: #5bc0de;
     --secondary-color: #f8f9fc;
     --accent-color: #2e59d9;
     --text-color: #5a5c69;
@@ -9,7 +8,8 @@
 body {
     background-color: var(--secondary-color);
     color: var(--text-color);
-    font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-family: "Nunito", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        "Helvetica Neue", Arial, sans-serif;
 }
 
 .booking-container {
@@ -88,7 +88,6 @@ body {
     min-height: 400px;
 }
 
-
 .booking-step {
     display: none;
     animation: fadeIn 0.5s ease;
@@ -130,7 +129,6 @@ body {
     border: 1px solid #4087ff !important;
 }
 
-
 .card-icon {
     font-size: 2rem;
     margin-bottom: 15px;
@@ -140,15 +138,19 @@ body {
 .time-slot {
     cursor: pointer;
     transition: all 0.2s ease;
-    border: 1px solid #dee2e6;
-    border-radius: 5px;
-    padding: 10px;
-    margin: 5px;
+    border: 1px solid #25d366;
+    border-radius: 25px;
+    padding: 8px 12px;
+    margin: 5px 0; /* hanya vertikal */
     text-align: center;
+    color: #25d366;
+    width: 100%; /* penuh ke kanan container */
+    max-width: 200px; /* batasi lebar maksimal */
+    box-sizing: border-box;
 }
 
 .time-slot:hover {
-    background-color: rgba(78, 115, 223, 0.1);
+    background-color: var(--primary-color);
 }
 
 .time-slot.selected {
@@ -166,6 +168,7 @@ body {
 .calendar-day {
     cursor: pointer;
     transition: all 0.2s ease;
+    border-radius: 5%;
 }
 
 .calendar-day:hover:not(.disabled) {
@@ -187,6 +190,16 @@ body {
     margin-bottom: 15px;
     padding-bottom: 15px;
     border-bottom: 1px solid #e3e6f0;
+}
+
+.modern-arrow {
+    font-size: 1.8rem;
+    color: var(--primary-color);
+    transition: transform 0.2s ease;
+}
+
+.modern-arrow:hover {
+    transform: scale(1.1);
 }
 
 @keyframes fadeIn {
@@ -219,7 +232,7 @@ body {
 
 /* Progress bar between steps */
 .booking-steps::before {
-    content: '';
+    content: "";
     /* position: absolute; */
     top: 80px;
     left: 20%;
@@ -245,11 +258,9 @@ body {
     transition: width 0.5s ease;
 }
 
-@media(min-width:720px)
-{
+@media (min-width: 720px) {
     .booking-content {
-    padding: 30px;
-    min-height: 400px;
-}
-
+        padding: 30px;
+        min-height: 400px;
+    }
 }

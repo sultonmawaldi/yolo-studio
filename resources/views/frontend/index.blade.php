@@ -8,6 +8,12 @@
       <!-- SEO Meta Tags -->
       <meta name="description" content="{{ $setting->meta_description }}">
       <meta name="keywords" content="{{ $setting->meta_keywords }}">
+      <!-- @TODO: replace SET_YOUR_CLIENT_KEY_HERE with your client key -->
+  <script type="text/javascript"
+		src="https://app.stg.midtrans.com/snap/snap.js"
+    data-client-key="{{ config('midtrans.client_key') }}"></script>
+  <!-- Note: replace with src="https://app.midtrans.com/snap/snap.js" for Production environment -->
+  <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="SB-Mid-client-wOopH1HTjOtfrXWE"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css"
@@ -17,7 +23,9 @@
     @if ($setting->header)
         {!! $setting->header !!}
     @endif
+
 </head>
+
 
 <body>
     <header class="header-section">
@@ -62,23 +70,23 @@
             <div class="booking-steps position-relative">
                 <div class="step active" data-step="1">
                     <div class="step-number">1</div>
-                    <div class="step-title">Category</div>
+                    <div class="step-title">Kategori</div>
                 </div>
                 <div class="step" data-step="2">
                     <div class="step-number">2</div>
-                    <div class="step-title">Service</div>
+                    <div class="step-title">Servis</div>
                 </div>
                 <div class="step" data-step="3">
                     <div class="step-number">3</div>
-                    <div class="step-title">Staff</div>
+                    <div class="step-title">Cabang</div>
                 </div>
                 <div class="step" data-step="4">
                     <div class="step-number">4</div>
-                    <div class="step-title">Date & Time</div>
+                    <div class="step-title">Tanggal & Waktu</div>
                 </div>
                 <div class="step" data-step="5">
                     <div class="step-number">5</div>
-                    <div class="step-title">Confirm</div>
+                    <div class="step-title">Konfirmasi</div>
                 </div>
                 <div class="progress-bar-steps">
                     <div class="progress"></div>
@@ -88,7 +96,7 @@
             <div class="booking-content">
                 <!-- Step 1: Category Selection -->
                 <div class="booking-step active" id="step1">
-                    <h3 class="mb-4">Select a Category</h3>
+                    <h3 class="mb-4">Pilih Kategori</h3>
                     <div class="row row-cols-1 row-cols-md-3 g-4" id="categories-container">
                         <!-- Categories will be inserted here by jQuery -->
                     </div>
@@ -96,7 +104,7 @@
 
                 <!-- Step 2: Service Selection -->
                 <div class="booking-step" id="step2">
-                    <h3 class="mb-4">Select a Service</h3>
+                    <h3 class="mb-4">Pilih Servis</h3>
                     <div class="selected-category-name mb-3 fw-bold"></div>
                     <div class="row row-cols-1 row-cols-md-3 g-4" id="services-container">
                         <!-- Services will be loaded dynamically based on category -->
@@ -105,7 +113,7 @@
 
                 <!-- Step 3: Employee Selection -->
                 <div class="booking-step" id="step3">
-                    <h3 class="mb-4">Select a Staff Member</h3>
+                    <h3 class="mb-4">Pilih Cabang</h3>
                     <div class="selected-service-name mb-3 fw-bold"></div>
                     <div class="row row-cols-1 row-cols-md-3 g-4" id="employees-container">
                         <!-- Employees will be loaded dynamically based on service -->
@@ -114,7 +122,7 @@
 
                 <!-- Step 4: Date and Time Selection -->
                 <div class="booking-step" id="step4">
-                    <h3 class="mb-4">Select Date & Time</h3>
+                    <h3 class="mb-4">Pilih Tanggal & Waktu</h3>
                     <div class="selected-employee-name mb-3 fw-bold"></div>
 
                     <div class="row">
@@ -122,22 +130,22 @@
                             <div class="card mb-4">
                                 <div class="card-header d-flex justify-content-between align-items-center">
                                     <button class="btn btn-sm btn-outline-secondary" id="prev-month"><i
-                                            class="bi bi-chevron-left"></i></button>
+                                            class="bi bi-arrow-left-circle-fill modern-arrow"></i></button>
                                     <h5 class="mb-0" id="current-month">March 2023</h5>
                                     <button class="btn btn-sm btn-outline-secondary" id="next-month"><i
-                                            class="bi bi-chevron-right"></i></button>
+                                            class="bi bi-arrow-right-circle-fill modern-arrow"></i></button>
                                 </div>
                                 <div class="card-body">
                                     <table class="table table-calendar">
                                         <thead>
                                             <tr>
-                                                <th>Sun</th>
-                                                <th>Mon</th>
-                                                <th>Tue</th>
-                                                <th>Wed</th>
-                                                <th>Thu</th>
-                                                <th>Fri</th>
-                                                <th>Sat</th>
+                                                <th>Sen</th>
+                                                <th>Sel</th>
+                                                <th>Rab</th>
+                                                <th>Kam</th>
+                                                <th>Jum</th>
+                                                <th>Sab</th>
+                                                <th>Min</th>
                                             </tr>
                                         </thead>
                                         <tbody id="calendar-body">
@@ -150,14 +158,14 @@
                         <div class="col-md-6">
                             <div class="card">
                                 <div class="card-header">
-                                    <h5 class="mb-0">Available Time Slots</h5>
+                                    <h5 class="mb-0 text-center">Slot Waktu Tersedia</h5>
                                     <div id="selected-date-display" class="text-muted small"></div>
                                 </div>
                                 <div class="card-body">
                                     <div id="time-slots-container" class="d-flex flex-wrap">
                                         <!-- Time slots will be loaded dynamically -->
                                         <div class="text-center text-muted w-100 py-4">
-                                            Please select a date to view available times
+                                            Silahkan pilih tanggal untuk melihat waktu yang tersedia
                                         </div>
                                     </div>
                                 </div>
@@ -168,56 +176,56 @@
 
                 <!-- Step 5: Confirmation -->
                 <div class="booking-step" id="step5">
-                    <h3 class="mb-4">Confirm Your Booking</h3>
+                    <h3 class="mb-4">Konfirmasi Booking Anda</h3>
                     <div class="card">
                         <div class="card-header bg-light">
-                            <h5 class="mb-0">Booking Summary</h5>
+                            <h5 class="mb-0">Ringkasan Pemesanan</h5>
                         </div>
                         <div class="card-body">
                             <div class="summary-item">
                                 <div class="row">
-                                    <div class="col-md-4 text-muted">Category:</div>
+                                    <div class="col-md-4 text-muted">Kategori:</div>
                                     <div class="col-md-8" id="summary-category"></div>
                                 </div>
                             </div>
                             <div class="summary-item">
                                 <div class="row">
-                                    <div class="col-md-4 text-muted">Service:</div>
+                                    <div class="col-md-4 text-muted">Servis:</div>
                                     <div class="col-md-8" id="summary-service"></div>
                                 </div>
                             </div>
                             <div class="summary-item">
                                 <div class="row">
-                                    <div class="col-md-4 text-muted">Staff Member:</div>
+                                    <div class="col-md-4 text-muted">Cabang:</div>
                                     <div class="col-md-8" id="summary-employee"></div>
                                 </div>
                             </div>
                             <div class="summary-item">
                                 <div class="row">
-                                    <div class="col-md-4 text-muted">Date & Time:</div>
+                                    <div class="col-md-4 text-muted">Tanggal & Waktu:</div>
                                     <div class="col-md-8" id="summary-datetime"></div>
                                 </div>
                             </div>
                             <div class="summary-item">
                                 <div class="row">
-                                    <div class="col-md-4 text-muted">Duration:</div>
+                                    <div class="col-md-4 text-muted">Durasi:</div>
                                     <div class="col-md-8" id="summary-duration"></div>
                                 </div>
                             </div>
                             <div class="summary-item">
                                 <div class="row">
-                                    <div class="col-md-4 text-muted">Price:</div>
+                                    <div class="col-md-4 text-muted">Harga:</div>
                                     <div class="col-md-8" id="summary-price"></div>
                                 </div>
                             </div>
 
                             <div class="mt-4">
-                                <h5>Your Information</h5>
+                                <h5>Informasi Anda</h5>
                                 <form id="customer-info-form">
                                     @csrf
                                     <div class="row g-3">
                                         <div class="col-md-6">
-                                            <label for="customer-name" class="form-label">Full Name</label>
+                                            <label for="customer-name" class="form-label">Nama Lengkap</label>
                                             <input type="text" class="form-control" id="customer-name" required>
                                         </div>
                                         <div class="col-md-6">
@@ -225,7 +233,7 @@
                                             <input type="email" class="form-control" id="customer-email" required>
                                         </div>
                                         <div class="col-md-12">
-                                            <label for="customer-phone" class="form-label">Phone</label>
+                                            <label for="customer-phone" class="form-label">Nomor HP/WhatsApp</label>
                                             <input type="tel" class="form-control" id="customer-phone" required>
                                         </div>
                                         <div class="col-12">
@@ -242,10 +250,10 @@
 
             <div class="booking-footer">
                 <button class="btn btn-outline-secondary" id="prev-step" disabled>
-                    <i class="bi bi-arrow-left"></i> Previous
+                    <i class="bi bi-arrow-left"></i> Kembali
                 </button>
                 <button class="btn btn-primary" id="next-step">
-                    Next <i class="bi bi-arrow-right"></i>
+                    Selanjutnya <i class="bi bi-arrow-right"></i>
                 </button>
             </div>
         </div>
@@ -264,24 +272,24 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header bg-success text-white">
-                    <h5 class="modal-title">Booking Confirmed!</h5>
+                    <h5 class="modal-title">Booking Dikonfirmasi!</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                         aria-label="Close"></button>
                 </div>
                 <div class="modal-body text-center p-4">
                     <i class="bi bi-check-circle text-success" style="font-size: 4rem;"></i>
-                    <h4 class="mt-3">Thank You!</h4>
-                    <p>Your appointment has been successfully booked.</p>
+                    <h4 class="mt-3">Terima Kasih!</h4>
+                    <p>Pemesanan anda telah berhasil di booking.</p>
                     <div class="alert alert-info mt-3">
-                        <p class="mb-0">A confirmation email has been sent to your email address.</p>
+                        <p class="mb-0">Email konfirmasi dan pesan WhatsApp telah dikirim ke alamat email Anda.</p>
                     </div>
                     <div class="booking-details mt-4 text-start">
-                        <h5>Booking Details:</h5>
+                        <h5>Booking Detail:</h5>
                         <div id="modal-booking-details"></div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Tutup</button>
                 </div>
             </div>
         </div>
@@ -544,29 +552,29 @@
                 switch (step) {
                     case 1:
                         if (!bookingState.selectedCategory) {
-                            alert("Please select a category");
+                            alert("Silahkan pilih kategori");
                             return false;
                         }
                         return true;
                     case 2:
                         if (!bookingState.selectedService) {
-                            alert("Please select a service");
+                            alert("Silahkan pilih servis");
                             return false;
                         }
                         return true;
                     case 3:
                         if (!bookingState.selectedEmployee) {
-                            alert("Please select a staff member");
+                            alert("Silahkan pilih cabang");
                             return false;
                         }
                         return true;
                     case 4:
                         if (!bookingState.selectedDate) {
-                            alert("Please select a date");
+                            alert("Silahkan pilih tanggal");
                             return false;
                         }
                         if (!bookingState.selectedTime) {
-                            alert("Please select a time slot");
+                            alert("Silahkan pilih slot");
                             return false;
                         }
                         return true;
@@ -576,71 +584,88 @@
             }
 
 
-            function updateServicesStep(categoryId) {
-                // Show loading state if needed
-                $("#services-container").html(
-                    '<div class="text-center py-5"><div class="spinner-border text-primary" role="status"></div></div>'
+            // Fungsi untuk memformat angka menjadi format Rupiah (untuk tampilan)
+            function formatRupiah(amount) {
+                 return new Intl.NumberFormat('id-ID', {
+                    style: 'currency',
+                    currency: 'IDR',
+                    minimumFractionDigits: 0
+                }).format(amount);
+            }
+
+function updateServicesStep(categoryId) {
+    // Show loading state if needed
+    $("#services-container").html(
+        '<div class="text-center py-5"><div class="spinner-border text-primary" role="status"></div></div>'
+    );
+
+    // Make AJAX request to get services for this category
+    $.ajax({
+        url: `/categories/${categoryId}/services`,
+        type: 'GET',
+        dataType: 'json',
+        success: function(response) {
+            if (response.success && response.services) {
+                const services = response.services;
+
+                // Update category name display
+                $(".selected-category-name").text(
+                    `Selected Category: ${services[0]?.category?.title || ''}`
                 );
 
-                // Make AJAX request to get services for this category
-                $.ajax({
-                    url: `/categories/${categoryId}/services`,
-                    type: 'GET',
-                    dataType: 'json',
-                    success: function(response) {
-                        if (response.success && response.services) {
-                            const services = response.services;
+                // Clear services container
+                $("#services-container").empty();
 
-                            // Update category name display
-                            $(".selected-category-name").text(
-                                `Selected Category: ${services[0]?.category?.title || ''}`);
+                // Add services with animation delay
+                services.forEach((service, index) => {
+                    // Format price and sale price for display
+                    const formattedPrice = formatRupiah(service.price);
+                    const formattedSalePrice = service.sale_price ? formatRupiah(service.sale_price) : null;
 
-                            // Clear services container
-                            $("#services-container").empty();
-
-                            // Add services with animation delay
-                            services.forEach((service, index) => {
-                                // Determine the price display
-                                let priceDisplay;
-                                if (service.sale_price) {
-                                    // If sale price exists, show both with strike-through on original price
-                                    priceDisplay =
-                                        `<span class="text-decoration-line-through text-muted">${service.price}</span> <span class=" fw-bold">${service.sale_price}</span>`;
-                                } else {
-                                    // If no sale price, just show regular price normally
-                                    priceDisplay =
-                                        `<span class="fw-bold">${service.price}</span>`;
-                                }
-
-                                const serviceCard = `
-                                    <div class="col animate-slide-in" style="animation-delay: ${index * 100}ms">
-                                        <div class="card border h-100 service-card text-center p-2" data-service="${service.id}">
-                                            <div class="card-body">
-                                                ${service.image ? `<img class="img-fluid rounded mb-2" src="uploads/images/service/${service.image}">` : ""}
-                                                <h5 class="card-title mb-1">${service.title}</h5>
-                                                <p class="card-text mb-1">${service.excerpt}</p>
-                                                <p class="card-text">${priceDisplay}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                `;
-
-                                $("#services-container").append(serviceCard);
-                            });
-                        } else {
-                            $("#services-container").html(
-                                '<div class="col-12 text-center py-5"><p>No services available for this category.</p></div>'
-                            );
-                        }
-                    },
-                    error: function(xhr) {
-                        console.error(xhr);
-                        $("#services-container").html(
-                            '<div class="col-12 text-center py-5"><p>Error loading services. Please try again.</p></div>'
-                        );
+                    // Determine the price display
+                    let priceDisplay;
+                    if (formattedSalePrice) {
+                        // If sale price exists, show both
+                        priceDisplay =
+                            `<span class="text-decoration-line-through text-muted">${formattedPrice}</span> 
+                             <span class="fw-bold">${formattedSalePrice}</span>`;
+                    } else {
+                        // Only regular price
+                        priceDisplay = `<span class="fw-bold">${formattedPrice}</span>`;
                     }
+
+                    // Service card HTML
+                    const serviceCard = `
+                        <div class="col animate-slide-in" style="animation-delay: ${index * 100}ms">
+                            <div class="card border h-100 service-card text-center p-2" 
+                                 data-service="${service.id}" 
+                                 data-price="${service.sale_price || service.price}">
+                                <div class="card-body">
+                                    ${service.image ? `<img class="img-fluid rounded mb-2" src="uploads/images/service/${service.image}">` : ""}
+                                    <h5 class="card-title mb-1">${service.title}</h5>
+                                    <p class="card-text mb-1">${service.excerpt}</p>
+                                    <p class="card-text">${priceDisplay}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                    $("#services-container").append(serviceCard);
                 });
+            } else {
+                $("#services-container").html(
+                    '<div class="col-12 text-center py-5"><p>No services available for this category.</p></div>'
+                );
             }
+        },
+        error: function(xhr) {
+            console.error(xhr);
+            $("#services-container").html(
+                '<div class="col-12 text-center py-5"><p>Error loading services. Please try again.</p></div>'
+            );
+        }
+    });
+}
 
 
 
@@ -727,11 +752,11 @@
                 const firstDay = new Date(year, month, 1);
                 const lastDay = new Date(year, month + 1, 0);
                 const daysInMonth = lastDay.getDate();
-                const startingDay = firstDay.getDay(); // 0 = Sunday
+                const startingDay = (firstDay.getDay() + 6) % 7; // 0 = Monday
 
                 // Update month display
-                const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August",
-                    "September", "October", "November", "December"
+                const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus",
+                    "September", "Oktober", "November", "Desember"
                 ];
                 $("#current-month").text(`${monthNames[month]} ${year}`);
 
@@ -783,8 +808,8 @@
                 const currentMonthText = $("#current-month").text();
                 const [monthName, year] = currentMonthText.split(" ");
 
-                const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August",
-                    "September", "October", "November", "December"
+                const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus",
+                    "September", "Oktober", "November", "Desember"
                 ];
                 let month = monthNames.indexOf(monthName);
                 let yearNum = parseInt(year);
@@ -879,13 +904,14 @@
 
                         if (response.available_slots.length === 0) {
                             $("#time-slots-container").html(`
-                    <div class="text-center py-4">
+                    <div class="text-center w-100 py-4">
                         <div class="alert alert-warning">
                             <i class="bi bi-clock-history me-2"></i>
                             No available slots for this date
                         </div>
                         <button class="btn btn-sm btn-outline-primary mt-2" onclick="updateCalendar()">
-                            <i class="bi bi-arrow-left me-1"></i> Back to calendar
+                            <i class="bi bi-arrow-left me-1"></i>
+                            Back to calendar 
                         </button>
                     </div>
                 `);
@@ -898,8 +924,8 @@
                                 <div class="d-flex justify-content-between align-items-center">
                                     <small class="text-muted">
                                         <i class="bi bi-info-circle me-1"></i>
-                                        Each slot: ${response.slot_duration} mins
-                                        ${response.break_duration ? ` | Break: ${response.break_duration} mins` : ''}
+                                        Sesi Foto: ${response.slot_duration} menit
+                                        ${response.break_duration ? ` | Persiapan: ${response.break_duration} menit` : ''}
                                     </small>
 
                                 </div>
@@ -907,7 +933,7 @@
                         `);
 
                         // Add each time slot
-                        const $slotsContainer = $("<div class='slots-grid'></div>");
+                        const $slotsContainer = $("<div class='slots-grid d-flex flex-wrap justify-content-center gap-2'></div>");
                         response.available_slots.forEach(slot => {
                             const slotElement = $(`
                             <div class="time-slot btn btn-outline-primary mb-2"
@@ -975,7 +1001,7 @@
 
                 // Update date/time info
                 if (bookingState.selectedDate && bookingState.selectedTime) {
-                    const formattedDate = new Date(bookingState.selectedDate).toLocaleDateString('en-US', {
+                    const formattedDate = new Date(bookingState.selectedDate).toLocaleDateString('id-ID', {
                         weekday: 'long',
                         year: 'numeric',
                         month: 'long',
@@ -983,7 +1009,7 @@
                     });
 
                     $("#summary-datetime").text(
-                        `${formattedDate} at ${bookingState.selectedTime.display || bookingState.selectedTime}`);
+                        `${formattedDate} pukul ${bookingState.selectedTime.display || bookingState.selectedTime}`);
                 }
             }
 
@@ -992,93 +1018,109 @@
             // function submitBooking() {
 
             function submitBooking() {
-                // Get form data
-                const form = $('#customer-info-form');
-                const csrfToken = form.find('input[name="_token"]').val(); // Get CSRF token from form
+    // Get form data
+    const form = $('#customer-info-form');
+    const csrfToken = form.find('input[name="_token"]').val(); // Get CSRF token from form
 
-                // Prepare booking data
-                const bookingData = {
-                    employee_id: bookingState.selectedEmployee.id,
-                    service_id: bookingState.selectedService.id,
-                    name: $('#customer-name').val(),
-                    email: $('#customer-email').val(),
-                    phone: $('#customer-phone').val(),
-                    notes: $('#customer-notes').val(),
-                    amount: parseFloat(bookingState.selectedService.price.replace(/[^0-9.]/g, '')),
-                    booking_date: bookingState.selectedDate,
-                    booking_time: bookingState.selectedTime.start || bookingState.selectedTime,
-                    status: 'Pending payment',
-                    _token: csrfToken // Include CSRF token in payload
-                };
+    // Prepare booking data
+    const bookingData = {
+        employee_id: bookingState.selectedEmployee.id,
+        service_id: bookingState.selectedService.id,
+        name: $('#customer-name').val(),
+        email: $('#customer-email').val(),
+        phone: $('#customer-phone').val(),
+        notes: $('#customer-notes').val(),
+        amount: parseInt(bookingState.selectedService.price.replace(/[^0-9]/g, ''), 10),
+        booking_date: bookingState.selectedDate,
+        booking_time: bookingState.selectedTime.start || bookingState.selectedTime,
+        status: 'Confirmed',
+        _token: csrfToken
+    };
 
-                // Add user_id if authenticated (using JavaScript approach)
-                if (typeof currentAuthUser !== 'undefined' && currentAuthUser) {
-                    bookingData.user_id = currentAuthUser.id;
-                }
+    if (typeof currentAuthUser !== 'undefined' && currentAuthUser) {
+        bookingData.user_id = currentAuthUser.id;
+    }
 
-                // Show loading state
-                const nextBtn = $("#next-step");
-                nextBtn.prop('disabled', true).html(
-                    '<span class="spinner-border spinner-border-sm" role="status"></span> Processing...'
-                );
+    const nextBtn = $("#next-step");
+    nextBtn.prop('disabled', true).html(
+        '<span class="spinner-border spinner-border-sm" role="status"></span> Processing...'
+    );
 
-                // Submit via AJAX
-                $.ajax({
-                    url: '/bookings',
-                    method: 'POST',
-                    data: bookingData,
-                    success: function(response) {
-                        // Update modal with booking details
-                        const formattedDate = new Date(bookingState.selectedDate).toLocaleDateString(
-                            'en-US', {
-                                weekday: 'long',
-                                year: 'numeric',
-                                month: 'long',
-                                day: 'numeric'
-                            });
+    // Step 1: Get Snap Token from server
+    $.ajax({
+        url: '/midtrans/token',
+        method: 'POST',
+        data: bookingData,
+        success: function(response) {
+        const snapToken = response.token;
 
-                        const bookingDetails = `
+        console.log("Snap Token:", snapToken); 
+        console.log("Transaksi URL:", `https://app.sandbox.midtrans.com/snap/v2/vtweb/${snapToken}`);
+
+
+            // Step 2: Open Snap payment popup
+            snap.pay(snapToken, {
+                onSuccess: function(result) {
+                    // Step 3: Save booking to database
+                    bookingData.payment_result = JSON.stringify(result); // Optional: save result
+
+                    $.ajax({
+                        url: '/bookings',
+                        method: 'POST',
+                        data: bookingData,
+                        success: function(response) {
+                            const formattedDate = new Date(bookingState.selectedDate).toLocaleDateString(
+                                'id-ID', {
+                                    weekday: 'long',
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric'
+                                });
+
+                            const bookingDetails = `
                                 <div class="mb-2"><strong>Customer:</strong> ${$("#customer-name").val()}</div>
                                 <div class="mb-2"><strong>Service:</strong> ${bookingState.selectedService.title}</div>
                                 <div class="mb-2"><strong>Staff:</strong> ${bookingState.selectedEmployee.user.name}</div>
-                                <div class="mb-2"><strong>Date & Time:</strong> ${formattedDate} at ${bookingState.selectedTime.display || bookingState.selectedTime}</div>
-                                 <div class="mb-2"><strong>Amount:</strong> ${bookingState.selectedService.price}</div>
+                                <div class="mb-2"><strong>Date & Time:</strong> ${formattedDate} pukul ${bookingState.selectedTime.display || bookingState.selectedTime}</div>
+                                <div class="mb-2"><strong>Amount:</strong> ${bookingState.selectedService.price}</div>
                                 <div><strong>Reference:</strong> ${response.booking_id || 'BK-' + Math.random().toString(36).substr(2, 8).toUpperCase()}</div>
                             `;
 
-                        $('#modal-booking-details').html(bookingDetails);
+                            $('#modal-booking-details').html(bookingDetails);
 
-                        // Show success modal
-                        const successModal = new bootstrap.Modal('#bookingSuccessModal');
-                        successModal.show();
+                            const successModal = new bootstrap.Modal('#bookingSuccessModal');
+                            successModal.show();
 
-                        // Reset form after delay
-                        setTimeout(resetBooking, 1000);
-                    },
-                    error: function(xhr) {
-                        let errorMessage = 'Booking failed. Please try again.';
-
-                        if (xhr.responseJSON && xhr.responseJSON.message) {
-                            errorMessage = xhr.responseJSON.message;
-                        } else if (xhr.status === 422) {
-                            errorMessage = 'Validation error: Please check your information.';
+                            setTimeout(resetBooking, 1000);
+                        },
+                        error: function(xhr) {
+                            alert('Booking failed after payment. Please contact support.');
+                        },
+                        complete: function() {
+                            nextBtn.prop('disabled', false).html('Confirm Booking <i class="bi bi-check-circle"></i>');
                         }
+                    });
+                },
+                onPending: function(result) {
+                    alert('Waiting for payment confirmation...');
+                },
+                onError: function(result) {
+                    alert('Payment failed. Please try again.');
+                    nextBtn.prop('disabled', false).html('Confirm Booking <i class="bi bi-check-circle"></i>');
+                },
+                onClose: function() {
+                    alert('Payment popup closed. Booking is cancelled.');
+                    nextBtn.prop('disabled', false).html('Confirm Booking <i class="bi bi-check-circle"></i>');
+                }
+            });
+        },
+        error: function(xhr) {
+            alert('Failed to initiate payment. Please try again.');
+            nextBtn.prop('disabled', false).html('Confirm Booking <i class="bi bi-check-circle"></i>');
+        }
+    });
+}
 
-                        alert(errorMessage);
-                        nextBtn.prop('disabled', false).html(
-                            'Confirm Booking <i class="bi bi-check-circle"></i>');
-                    },
-                    complete: function() {
-                        // Re-enable button if request fails
-                        if (nextBtn.prop('disabled')) {
-                            setTimeout(() => {
-                                nextBtn.prop('disabled', false).html(
-                                    'Confirm Booking <i class="bi bi-check-circle"></i>');
-                            }, 2000);
-                        }
-                    }
-                });
-            }
 
             function resetBooking() {
                 // Reset booking state
@@ -1105,6 +1147,7 @@
     @if ($setting->footer)
         {!! $setting->footer !!}
     @endif
+
 </body>
 
 </html>

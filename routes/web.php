@@ -12,7 +12,8 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\DashboardController;
-
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\OrderController;
 use Illuminate\Http\Request;
 
 
@@ -96,7 +97,7 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard
 
 //frontend routes
 //fetch services from categories
-Route::get('/categories/{category}/services', [FrontendController::class, 'getServices'])->name('get.services');
+Route::get('/categories/{id}/services', [FrontendController::class, 'getServices']);
 
 //fetch employee from category
 Route::get('/services/{service}/employees', [FrontendController::class, 'getEmployees'])->name('get.employees');
@@ -113,5 +114,9 @@ Route::post('/appointments/update-status', [AppointmentController::class, 'updat
 
 //update status from dashbaord
 Route::post('/update-status', [DashboardController::class, 'updateStatus'])->name('dashboard.update.status');
+
+//payment
+Route::post('/midtrans/token', [PaymentController::class, 'getSnapToken']);
+
 
 

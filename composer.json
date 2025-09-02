@@ -14,8 +14,9 @@
         "laravel/framework": "^11.31",
         "laravel/tinker": "^2.9",
         "laravel/ui": "^4.6",
+        "midtrans/midtrans-php": "^2.6",
         "rappasoft/laravel-authentication-log": "^5.0",
-        "spatie/laravel-permission": "^6.10",
+        "spatie/laravel-permission": "^6.21 || ^7.0",
         "spatie/opening-hours": "^4.1"
     },
     "require-dev": {

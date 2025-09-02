@@ -20,7 +20,7 @@ class SettingFactory extends Factory
             'bname' => 'Vfix Technology',
             'email' => 'admin@yourmail.com',
             'phone' => '+91 8447 525 204',
-            'currency' => 'INR',
+            'currency' => 'IDR',
             'meta_title' => 'Vfix Technology - Advance Booking System',
         ];
     }

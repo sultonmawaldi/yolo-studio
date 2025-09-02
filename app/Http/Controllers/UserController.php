@@ -29,13 +29,13 @@ class UserController extends Controller
     public function create()
     {
         $days = [
-            'monday',
-            'tuesday',
-            'wednesday',
-            'thursday',
-            'friday',
-            'saturday',
-            'sunday',
+            'Senin',
+            'Selasa',
+            'Rabu',
+            'Kamis',
+            'Jumat',
+            'Sabtu',
+            'Minggu',
         ];
 
         //$roles = Role::where('name', '!=', 'admin')->get();
@@ -70,7 +70,7 @@ class UserController extends Controller
             'email' => $data['email'],
             'phone' => $data['phone'] ?? "", // Optional field
             'email_verified_at' => now(),
-            'password' => \Hash::make($data['password']),
+            'password' => Hash::make($data['password']),
         ]);
 
         // Assign the role to the user
@@ -112,11 +112,17 @@ class UserController extends Controller
 
         // Available days of the week
         $days = [
-            'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday',
+            'Senin',
+            'Selasa',
+            'Rabu',
+            'Kamis',
+            'Jumat',
+            'Sabtu',
+            'Minggu',
         ];
 
         // Available slot duration steps
-        $steps = ['10', '15', '20', '30', '45', '60'];
+        $steps = ['5', '10', '15', '20', '30', '45', '60'];
 
         // Available break duration steps
         $breaks = ['5', '10', '15', '20', '25', '30'];
@@ -215,7 +221,7 @@ class UserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone ?? $user->phone,
-            'password' => $request->password ? \Hash::make($request->password) : $user->password,
+            'password' => $request->password ? Hash::make($request->password) : $user->password,
             'status' => $status,
         ]);
 

@@ -6,19 +6,27 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Employee;
 use App\Models\Holiday;
+use Illuminate\Support\Facades\Auth;
+
 
 class ProfileController extends Controller
 {
     public function index()
     {
-        $user = \Auth::user();
+        $user = Auth::user();
          // Available days of the week
          $days = [
-            'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday',
+            'Senin',
+            'Selasa',
+            'Rabu',
+            'Kamis',
+            'Jumat',
+            'Sabtu',
+            'Minggu',
         ];
 
         // Available slot duration steps
-        $steps = ['10', '15', '20', '30', '45', '60'];
+        $steps = ['5', '10', '15', '20', '30', '45', '60'];
 
         // Available break duration steps
         $breaks = ['5', '10', '15', '20', '25', '30'];

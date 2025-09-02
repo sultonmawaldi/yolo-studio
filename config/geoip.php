@@ -149,7 +149,7 @@ return [
         'timezone' => 'America/New_York',
         'continent' => 'NA',
         'default' => true,
-        'currency' => 'USD',
+        'currency' => 'IDR',
     ],
 
 ];

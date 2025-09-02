@@ -23,23 +23,23 @@
 
           @php
               $days = [
-                "Monday",
-                "Tuesday",
-                "Wednesday",
-                "Thursday",
-                "Friday",
-                "Saturday",
-                "Sunday",
+                'Senin',
+              'Selasa',
+              'Rabu',
+              'Kamis',
+              'Jumat',
+              'Sabtu',
+              'Minggu',
               ];
           @endphp
        @foreach ($days as $day)
        <div class="mb-3">
-        <label for="monday" class="form-label">{{ $day }}</label>
+        <label for="Senin" class="form-label">{{ $day }}</label>
         <div class="time-range">
           <input type="time" class="form-control"  name="day[{{ $day }}][]" />
-          <input type="time" class="form-control"  name="day[monday][]" />
-          <input type="time" class="form-control"  name="day[monday][]" />
-          <input type="time" class="form-control"  name="day[monday][]" />
+          <input type="time" class="form-control"  name="day[Senin][]" />
+          <input type="time" class="form-control"  name="day[Senin][]" />
+          <input type="time" class="form-control"  name="day[Senin][]" />
         </div>
        @endforeach
 

@@ -19,7 +19,8 @@ class FrontendController extends Controller
     public function __construct()
     {
         $setting = Setting::firstOrFail();
-        view::share('setting',$setting);
+        view()->share('setting', $setting);
+
     }
 
     public function index()
@@ -37,31 +38,15 @@ class FrontendController extends Controller
     }
 
 
-    public function getServices(Request $request, Category $category)
-    {
-        $setting = Setting::firstOrFail();
+       public function getServices($id)
+{
+    $services = Service::with('category')->where('category_id', $id)->get();
 
-        $services = $category->services()
-            ->where('status', 1)
-            ->with('category')
-            ->get()
-            ->map(function ($service) use ($setting) {
-                if (isset($service->price)) {
-                    $service->price = Number::currency($service->price, $setting->currency);
-                }
-
-                if (isset($service->sale_price)) {
-                    $service->sale_price = Number::currency($service->sale_price, $setting->currency);
-                }
-
-                return $service;
-            });
-
-        return response()->json([
-            'success' => true,
-            'services' => $services
-        ]);
-    }
+    return response()->json([
+        'success'  => true,
+        'services' => $services
+    ]);
+}
 
 
     public function getEmployees(Request $request, Service $service)
