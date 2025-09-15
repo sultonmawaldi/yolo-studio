@@ -85,7 +85,7 @@ class DashboardController extends Controller
     private function getStatusColor($status)
     {
         $colors = [
-            'Pending payment' => '#f39c12',
+            'Pending' => '#f39c12',
             'Processing' => '#3498db',
             'Confirmed' => '#2ecc71',
             'Cancelled' => '#ff0000',

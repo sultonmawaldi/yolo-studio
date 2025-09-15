@@ -329,6 +329,20 @@ return [
             'can'  => 'appointments.view | appointments.create | appointments.edit | appointments.delete',
 
         ],
+        [
+    'text' => 'Transactions',
+    'icon' => 'fas fa-receipt',
+    'can'  => 'transactions.view | transactions.create | transactions.edit | transactions.delete',
+    'submenu' => [
+        [
+            'text' => 'View All',
+            'icon' => 'fas fa-fw fa-eye',
+            'route' => 'transactions.index',
+            'can'   => 'transactions.view'
+        ],
+    ],
+],
+
 
         [
             'text' => 'Categories',
@@ -401,6 +415,27 @@ return [
 
             ],
         ],
+        // ** Tambahan menu Coupons **
+    [
+        'text' => 'Coupons',
+        'route' => 'coupons.index',
+        'icon' => 'fas fa-ticket-alt',
+        'can'  => 'coupons.view',
+        'submenu' => [
+            [
+                'text' => 'Add New Coupon',
+                'icon' => 'fas fa-plus',
+                'route' => 'coupons.create',
+                'can'  => 'coupons.create',
+            ],
+            [
+                'text' => 'View All Coupons',
+                'icon' => 'fas fa-eye',
+                'route' => 'coupons.index',
+                'can'  => 'coupons.view',
+            ],
+        ],
+    ],
         [
             'text' => 'profile',
             'route' => 'profile',

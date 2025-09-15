@@ -78,7 +78,7 @@
                             <div class="form-group ">
                                 <label><strong>Status:</strong></label>
                                 <select name="status" class="form-control" id="modalStatusSelect">
-                                    <option value="Pending payment">Pending payment</option>
+                                    <option value="Pending">Pending payment</option>
                                     <option value="Processing">Processing</option>
                                     <option value="Confirmed">Confirmed</option>
                                     <option value="Cancelled">Cancelled</option>
@@ -825,7 +825,7 @@ if ($usingOldInput) {
                                                                         <td>
                                                                             @php
                                                                                 $statusColors = [
-                                                                                    'Pending payment' => '#f39c12',
+                                                                                    'Pending' => '#f39c12',
                                                                                     'Processing' => '#3498db',
                                                                                     'Confirmed' => '#2ecc71',
                                                                                     'Cancelled' => '#ff0000',
@@ -913,7 +913,7 @@ if ($usingOldInput) {
                                                                         <td>
                                                                             @php
                                                                                 $statusColors = [
-                                                                                    'Pending payment' => '#f39c12',
+                                                                                    'Pending' => '#f39c12',
                                                                                     'Processing' => '#3498db',
                                                                                     'Confirmed' => '#2ecc71',
                                                                                     'Cancelled' => '#ff0000',
@@ -1097,7 +1097,13 @@ if ($usingOldInput) {
             });
 
             // Bind change and add-more events to all days
-            ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu',].forEach(function(day) {
+            ['monday',
+            'tuesday',
+            'wednesday',
+            'thusrday',
+            'friday',
+            'saturday',
+            'sunday',].forEach(function(day) {
                 $('#' + day).on('change', function() {
                     toggleDayFields(day);
                 }).trigger('change');
@@ -1195,7 +1201,7 @@ if ($usingOldInput) {
 
             // Set colored status badge
             var statusColors = {
-                'Pending payment': '#f39c12',
+                'Pending': '#f39c12',
                 'Processing': '#3498db',
                 'Confirmed': '#2ecc71',
                 'Cancelled': '#ff0000',
@@ -1216,7 +1222,7 @@ if ($usingOldInput) {
     {{-- user booking data --}}
     <script>
         const statusColors = {
-            'Pending payment': '#f39c12',
+            'Pending': '#f39c12',
             'Processing': '#3498db',
             'Confirmed': '#2ecc71',
             'Cancelled': '#ff0000',

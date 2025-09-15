@@ -8,6 +8,7 @@
       <!-- SEO Meta Tags -->
       <meta name="description" content="{{ $setting->meta_description }}">
       <meta name="keywords" content="{{ $setting->meta_keywords }}">
+      <meta name="csrf-token" content="{{ csrf_token() }}">
       <!-- @TODO: replace SET_YOUR_CLIENT_KEY_HERE with your client key -->
   <script type="text/javascript"
 		src="https://app.stg.midtrans.com/snap/snap.js"
@@ -120,47 +121,52 @@
                     </div>
                 </div>
 
-                <!-- Step 4: Date and Time Selection -->
-                <div class="booking-step" id="step4">
-                    <h3 class="mb-4">Pilih Tanggal & Waktu</h3>
-                    <div class="selected-employee-name mb-3 fw-bold"></div>
+               <!-- Step 4: Date and Time Selection -->
+<div class="booking-step" id="step4">
+  <h3 class="mb-4 fw-semibold bi bi-calendar-event me-2"> Pilih Tanggal & Waktu</h3>
+  <div class="selected-employee-name mb-3 fw-bold"></div>
 
-                    <div class="row">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card mb-4 shadow-sm border-0 rounded-4 modern-card">
+        <div class="card-header bg-light d-flex justify-content-between align-items-center rounded-top-4">
+          <button class="btn btn-sm btn-light border-0 shadow-sm" id="prev-month">
+            <i class="bi bi-arrow-left-circle-fill modern-arrow"></i>
+          </button>
+          <h5 class="mb-0 fw-semibold text-dark" id="current-month">March 2023</h5>
+          <button class="btn btn-sm btn-light border-0 shadow-sm" id="next-month">
+            <i class="bi bi-arrow-right-circle-fill modern-arrow"></i>
+          </button>
+        </div>
+        <div class="card-body">
+          <table class="table table-calendar text-center align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>Sen</th>
+                <th>Sel</th>
+                <th>Rab</th>
+                <th>Kam</th>
+                <th>Jum</th>
+                <th>Sab</th>
+                <th>Min</th>
+              </tr>
+            </thead>
+            <tbody id="calendar-body">
+              <!-- Calendar will be generated dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
                         <div class="col-md-6">
-                            <div class="card mb-4">
-                                <div class="card-header d-flex justify-content-between align-items-center">
-                                    <button class="btn btn-sm btn-outline-secondary" id="prev-month"><i
-                                            class="bi bi-arrow-left-circle-fill modern-arrow"></i></button>
-                                    <h5 class="mb-0" id="current-month">March 2023</h5>
-                                    <button class="btn btn-sm btn-outline-secondary" id="next-month"><i
-                                            class="bi bi-arrow-right-circle-fill modern-arrow"></i></button>
-                                </div>
-                                <div class="card-body">
-                                    <table class="table table-calendar">
-                                        <thead>
-                                            <tr>
-                                                <th>Sen</th>
-                                                <th>Sel</th>
-                                                <th>Rab</th>
-                                                <th>Kam</th>
-                                                <th>Jum</th>
-                                                <th>Sab</th>
-                                                <th>Min</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="calendar-body">
-                                            <!-- Calendar will be generated dynamically -->
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h5 class="mb-0 text-center">Slot Waktu Tersedia</h5>
+                            <div class="card shadow-sm border-0 rounded-3 modern-card">
+                                <div class="card-header text-center py-3 rounded-top-3">
+                                    <h5 class="mb-1 fw-semibold text-dark bi bi-check2-square"> Slot Waktu Tersedia</h5>
                                     <div id="selected-date-display" class="text-muted small"></div>
                                 </div>
+
+
                                 <div class="card-body">
                                     <div id="time-slots-container" class="d-flex flex-wrap">
                                         <!-- Time slots will be loaded dynamically -->
@@ -174,98 +180,211 @@
                     </div>
                 </div>
 
-                <!-- Step 5: Confirmation -->
-                <div class="booking-step" id="step5">
-                    <h3 class="mb-4">Konfirmasi Booking Anda</h3>
-                    <div class="card">
-                        <div class="card-header bg-light">
-                            <h5 class="mb-0">Ringkasan Pemesanan</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="summary-item">
-                                <div class="row">
-                                    <div class="col-md-4 text-muted">Kategori:</div>
-                                    <div class="col-md-8" id="summary-category"></div>
-                                </div>
-                            </div>
-                            <div class="summary-item">
-                                <div class="row">
-                                    <div class="col-md-4 text-muted">Servis:</div>
-                                    <div class="col-md-8" id="summary-service"></div>
-                                </div>
-                            </div>
-                            <div class="summary-item">
-                                <div class="row">
-                                    <div class="col-md-4 text-muted">Cabang:</div>
-                                    <div class="col-md-8" id="summary-employee"></div>
-                                </div>
-                            </div>
-                            <div class="summary-item">
-                                <div class="row">
-                                    <div class="col-md-4 text-muted">Tanggal & Waktu:</div>
-                                    <div class="col-md-8" id="summary-datetime"></div>
-                                </div>
-                            </div>
-                            <div class="summary-item">
-                                <div class="row">
-                                    <div class="col-md-4 text-muted">Durasi:</div>
-                                    <div class="col-md-8" id="summary-duration"></div>
-                                </div>
-                            </div>
-                            <div class="summary-item">
-                                <div class="row">
-                                    <div class="col-md-4 text-muted">Harga:</div>
-                                    <div class="col-md-8" id="summary-price"></div>
-                                </div>
-                            </div>
+               <!-- Step 5: Confirmation --> 
+<div class="booking-step" id="step5">
+  <h3 class="mb-4 fw-bold text-center">Konfirmasi Pemesanan</h3>
 
-                            <div class="mt-4">
-                                <h5>Informasi Anda</h5>
-                                <form id="customer-info-form">
-                                    @csrf
-                                    <div class="row g-3">
-                                        <div class="col-md-6">
-                                            <label for="customer-name" class="form-label">Nama Lengkap</label>
-                                            <input type="text" class="form-control" id="customer-name" required>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label for="customer-email" class="form-label">Email</label>
-                                            <input type="email" class="form-control" id="customer-email" required>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <label for="customer-phone" class="form-label">Nomor HP/WhatsApp</label>
-                                            <input type="tel" class="form-control" id="customer-phone" required>
-                                        </div>
-                                        <div class="col-12">
-                                            <label for="customer-notes" class="form-label">Notes (Optional)</label>
-                                            <textarea class="form-control" id="customer-notes" rows="3"></textarea>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="booking-footer">
-                <button class="btn btn-outline-secondary" id="prev-step" disabled>
-                    <i class="bi bi-arrow-left"></i> Kembali
-                </button>
-                <button class="btn btn-primary" id="next-step">
-                    Selanjutnya <i class="bi bi-arrow-right"></i>
-                </button>
-            </div>
-        </div>
+  <!-- Ringkasan Pemesanan -->
+  <div class="card shadow-sm border-0 mb-4">
+    <div class="card-header bg-grey border-bottom">
+      <h5 class="mb-0 fw-semibold text-center">
+        <i class="bi bi-clipboard-check me-2"></i> Ringkasan Pemesanan
+      </h5>
     </div>
 
-    <footer>
-        <div class="container pb-2">
-            <div class="row text-center">
-            <span>Designed & Developed by <a target="_blank" href="https://www.vfixtechnology.com">VFIX TECHNOLOGY</a></span>
-            </div>
+    <div class="card-body">
+      <div class="mb-3">
+
+        <!-- ITEM REUSABLE COMPONENT -->
+        <div class="row mb-3 align-items-center">
+          <div class="col-4 text-muted"><i class="bi bi-tags me-2"></i> Kategori : </div>
+          <div class="col-8 fw-medium text-dark" id="summary-category">-</div>
         </div>
-    </footer>
+
+        <div class="row mb-3 align-items-center">
+          <div class="col-4 text-muted"><i class="bi bi-gear me-2"></i> Servis : </div>
+          <div class="col-8 fw-medium text-dark" id="summary-service">-</div>
+        </div>
+
+        <div class="row mb-3 align-items-center">
+  <div class="col-4 text-muted">
+    <i class="bi bi-people me-2"></i> Jumlah Orang :
+  </div>
+  <div class="col-8">
+    <div class="d-flex align-items-center gap-3">
+      <!-- Tombol - -->
+      <button id="decrease-btn"
+        class="btn btn-dark rounded-circle shadow d-flex align-items-center justify-content-center"
+        style="width: 30px; height: 30px; font-size: 1.5rem;" type="button">
+        <i class="bi bi-dash-lg text-white"></i>
+      </button>
+
+      <!-- Jumlah -->
+      <span id="people-count"
+        class="fw-medium text-dark fs-5 user-select-none text-center"
+        style="min-width: 30px;">1</span>
+
+      <!-- Tombol + -->
+      <button id="increase-btn"
+        class="btn btn-dark rounded-circle shadow d-flex align-items-center justify-content-center"
+        style="width: 30px; height: 30px; font-size: 1.5rem;" type="button">
+        <i class="bi bi-plus-lg text-white"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
+
+        <div class="row mb-3 align-items-center">
+          <div class="col-4 text-muted"><i class="bi bi-building me-2"></i> Cabang : </div>
+          <div class="col-8 fw-medium text-dark" id="summary-employee">-</div>
+        </div>
+
+        <div class="row mb-3 align-items-center">
+          <div class="col-4 text-muted"><i class="bi bi-calendar3 me-2"></i> Tanggal & Waktu : </div>
+          <div class="col-8 fw-medium text-dark" id="summary-datetime">-</div>
+        </div>
+
+        <div class="row mb-3 align-items-center">
+          <div class="col-4 text-muted"><i class="bi bi-hourglass-split me-2"></i> Durasi : </div>
+          <div class="col-8 fw-medium text-dark" id="summary-duration">-</div>
+        </div>
+
+        <hr>
+
+        <div class="row mb-3 align-items-center">
+          <div class="col-4 fw-semibold"><i class="bi bi-currency-idr me-2 text-muted"></i> Harga : </div>
+          <div class="col-8 fw-bold text-dark fs-5" id="summary-price">Rp0</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+<!-- Checkout Pembayaran -->
+<div class="card shadow-sm border-0 mb-4">
+  <div class="card-header bg-gery text-dark text-center">
+    <h4 class="mb-0 fw-medium">
+      <i class="bi bi-cart-check me-2"></i> Checkout Pembayaran
+    </h4>
+  </div>
+
+  <div class="card-body">
+    <!-- Metode Pembayaran -->
+    <div class="mb-4">
+      <label for="payment-method" class="form-label fw-semibold">Metode Pembayaran:</label>
+        <select id="payment-method" class="form-select">
+          <option value="cash">Bayar Cash</option>
+          <option value="dp">Bayar DP</option>
+        </select>
+      </div>
+    
+
+    <!-- Kupon -->
+    <div class="mb-4">
+      <label for="coupon-code" class="form-label fw-semibold">Kode Kupon:</label>
+      <div class="input-group">
+        <input type="text" class="form-control" id="coupon-code" placeholder="Masukkan kode kupon">
+        <button class="btn btn-primary" type="button" id="apply-coupon">Gunakan</button>
+      </div>
+      <div class="form-text text-success d-none" id="coupon-success-msg">Kupon berhasil diterapkan!</div>
+      <div class="form-text text-danger d-none" id="coupon-error-msg">Kupon tidak valid.</div>
+    </div>
+
+    <!-- Ringkasan Pembayaran -->
+    <div id="payment-summary" class="border-top pt-3">
+      <h5 class="fw-medium mb-3">Ringkasan Pembayaran</h5>
+
+      <div class="row mb-2">
+        <div class="col-6 text-muted">Total Harga :</div>
+        <div class="col-6 text-end fw-medium" id="original-price">Rp0</div>
+      </div>
+
+      <div class="row mb-2 d-none" id="discount-row">
+        <div class="col-6 text-muted">Potongan Kupon:</div>
+        <div class="col-6 text-end" id="discount-amount">- Rp0</div>
+      </div>
+
+      <div class="row mb-2 border-top pt-2">
+        <div class="col-6 fw-semibold">Total Setelah Diskon:</div>
+        <div class="col-6 text-end fw-bold" id="final-price">Rp0</div>
+      </div>
+
+      <div class="row mb-2 d-none border-top pt-2" id="dp-row">
+        <div class="col-6 text-muted">Bayar Sekarang (DP):</div>
+        <div class="col-6 text-end" id="dp-amount">Rp0</div>
+      </div>
+
+      <div class="row mb-2 d-none" id="sisa-row">
+        <div class="col-6 text-muted">Sisa Pembayaran:</div>
+        <div class="col-6 text-end text-danger" id="sisa-payment">Rp0</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Informasi Pelanggan -->
+<div class="card shadow-sm border-0">
+  <div class="card-header bg-white border-bottom">
+    <h5 class="mb-0 fw-semibold"><i class="bi bi-person-lines-fill me-2"></i> Informasi Anda</h5>
+  </div>
+  <div class="card-body">
+    <form id="customer-info-form">
+      @csrf
+      <input type="hidden" id="total_amount" name="total_amount" value="0">
+    <input type="hidden" id="payment_status" name="payment_status" value="">
+    <input type="hidden" id="midtrans_order_id" name="midtrans_order_id" value="">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label for="customer-name" class="form-label">Nama Lengkap</label>
+          <input type="text" class="form-control" id="customer-name" placeholder="Nama Anda" required>
+        </div>
+        <div class="col-md-6">
+          <label for="customer-email" class="form-label">Email</label>
+          <input type="email" class="form-control" id="customer-email" placeholder="email@domain.com" required>
+        </div>
+        <div class="col-md-12">
+          <label for="customer-phone" class="form-label">Nomor HP/WhatsApp</label>
+          <input type="tel" class="form-control" id="customer-phone" placeholder="08xxxxxxxxxx" required>
+        </div>
+        <div class="col-12">
+          <label for="customer-notes" class="form-label">Catatan (Opsional)</label>
+          <textarea class="form-control" id="customer-notes" rows="3" placeholder="Tulis catatan jika ada..."></textarea>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+</div>
+</div>
+
+<!-- Booking Footer -->
+<div class="booking-footer mt-4 d-flex justify-content-between">
+  <button class="btn btn-outline-secondary" id="prev-step" disabled>
+    <i class="bi bi-arrow-left"></i> Kembali
+  </button>
+  <button class="btn btn-primary" id="next-step">
+    Selanjutnya <i class="bi bi-arrow-right"></i>
+  </button>
+</div>
+</div>
+
+<!-- Footer -->
+<footer class="mt-5">
+  <div class="container pb-2">
+    <div class="row text-center">
+      <span class="small text-muted">Designed & Developed by 
+        <a target="_blank" href="https://www.vfixtechnology.com" class="text-decoration-none text-primary fw-medium">
+          VFIX TECHNOLOGY
+        </a>
+      </span>
+    </div>
+  </div>
+</footer>
+
+
 
     <!-- Success Modal -->
     <div class="modal fade" id="bookingSuccessModal" tabindex="-1" aria-hidden="true">
@@ -360,11 +479,27 @@
                 }
             });
 
-            $("#prev-step").click(function() {
-                if (bookingState.currentStep > 1) {
-                    goToStep(bookingState.currentStep - 1);
-                }
-            });
+            $("#prev-step").click(function () {
+    if (bookingState.currentStep > 1) {
+        const prevStep = bookingState.currentStep - 1;
+
+        // Jika kembali ke step sebelum step 5, reset peopleCount
+        if (bookingState.currentStep === 5) { 
+            window.peopleCount = window.minPeople || 1;
+
+            // Update sessionStorage agar konsisten
+            let stored = JSON.parse(sessionStorage.getItem("selectedService") || "{}");
+            stored.peopleCount = window.peopleCount;
+            sessionStorage.setItem("selectedService", JSON.stringify(stored));
+
+            // Update tampilan jumlah dan harga
+            updatePeopleCountDisplay();
+        }
+
+        goToStep(prevStep);
+    }
+});
+
 
             // Category selection
             $(document).on("click", ".category-card", function() {
@@ -394,6 +529,9 @@
                 const serviceTitle = $(this).find('.card-title').text();
                 // const servicePrice = $(this).find('.fw-bold').text().replace('$', '');
                 const servicePrice = $(this).find('.fw-bold').text();
+                const maxPeople = $(this).data("max-people");
+                const extraPricePerPerson = $(this).data("extra-price");
+                const dpAmount = parseInt($(this).data("dp-amount") || 0);
                 const serviceDuration = $(this).find('.card-text:contains("Duration:")').text().replace(
                     'Duration: ', '');
 
@@ -402,7 +540,10 @@
                     id: serviceId,
                     title: serviceTitle,
                     price: servicePrice,
-                    duration: serviceDuration
+                    duration: serviceDuration,
+                    max_people: maxPeople,
+                    extra_price_per_person: extraPricePerPerson,
+                    dp_amount: dpAmount,
                 };
 
                 // Reset subsequent selections
@@ -594,12 +735,11 @@
             }
 
 function updateServicesStep(categoryId) {
-    // Show loading state if needed
+    // Show loading state
     $("#services-container").html(
         '<div class="text-center py-5"><div class="spinner-border text-primary" role="status"></div></div>'
     );
 
-    // Make AJAX request to get services for this category
     $.ajax({
         url: `/categories/${categoryId}/services`,
         type: 'GET',
@@ -608,43 +748,41 @@ function updateServicesStep(categoryId) {
             if (response.success && response.services) {
                 const services = response.services;
 
-                // Update category name display
                 $(".selected-category-name").text(
                     `Selected Category: ${services[0]?.category?.title || ''}`
                 );
 
-                // Clear services container
                 $("#services-container").empty();
 
-                // Add services with animation delay
                 services.forEach((service, index) => {
-                    // Format price and sale price for display
                     const formattedPrice = formatRupiah(service.price);
                     const formattedSalePrice = service.sale_price ? formatRupiah(service.sale_price) : null;
 
-                    // Determine the price display
                     let priceDisplay;
                     if (formattedSalePrice) {
-                        // If sale price exists, show both
                         priceDisplay =
                             `<span class="text-decoration-line-through text-muted">${formattedPrice}</span> 
                              <span class="fw-bold">${formattedSalePrice}</span>`;
                     } else {
-                        // Only regular price
                         priceDisplay = `<span class="fw-bold">${formattedPrice}</span>`;
                     }
 
-                    // Service card HTML
                     const serviceCard = `
                         <div class="col animate-slide-in" style="animation-delay: ${index * 100}ms">
                             <div class="card border h-100 service-card text-center p-2" 
                                  data-service="${service.id}" 
-                                 data-price="${service.sale_price || service.price}">
+                                 data-price="${service.sale_price || service.price}"
+                                 data-max-people="${service.max_people ?? 1}"
+                                 data-min-people="${service.min_people ?? 1}"
+                                 data-extra-price="${service.extra_price_per_person ?? 0}"
+                                 data-dp-amount="${service.dp_amount ?? 0}">
                                 <div class="card-body">
                                     ${service.image ? `<img class="img-fluid rounded mb-2" src="uploads/images/service/${service.image}">` : ""}
                                     <h5 class="card-title mb-1">${service.title}</h5>
                                     <p class="card-text mb-1">${service.excerpt}</p>
                                     <p class="card-text">${priceDisplay}</p>
+                                    <p class="card-text"><small class="text-muted">Jumlah Maksimal : ${service.max_people ?? '-'} Orang</small></p>
+                                    <small class="text-muted">Tambahan/orang: ${formatRupiah(service.extra_price_per_person ?? 0)}</small>
                                 </div>
                             </div>
                         </div>
@@ -652,6 +790,10 @@ function updateServicesStep(categoryId) {
 
                     $("#services-container").append(serviceCard);
                 });
+
+                // Jangan attach event click ulang setiap kali updateServicesStep dipanggil!
+                // Hanya attach event sekali di luar fungsi, tapi kalau mau tetap di sini:
+                // gunakan event delegation (pada container) supaya event listener tidak duplikat.
             } else {
                 $("#services-container").html(
                     '<div class="col-12 text-center py-5"><p>No services available for this category.</p></div>'
@@ -661,11 +803,119 @@ function updateServicesStep(categoryId) {
         error: function(xhr) {
             console.error(xhr);
             $("#services-container").html(
-                '<div class="col-12 text-center py-5"><p>Error loading services. Please try again.</p></div>'
+                '<div class="col-12 text-center w-100 py-5"><p>Error loading services. Please try again.</p></div>'
             );
         }
     });
 }
+
+// Event delegation: pasang sekali event listener di luar fungsi updateServicesStep
+$("#services-container").off("click", ".service-card").on("click", ".service-card", function () {
+    const serviceId = $(this).data("service");
+    const serviceTitle = $(this).find(".card-title").text();
+    const servicePrice = parseInt($(this).data("price"));
+    const maxPeople = parseInt($(this).data("max-people")) || 1;
+    const minPeople = parseInt($(this).data("min-people")) || 1;
+    const extraPricePerPerson = parseInt($(this).data("extra-price")) || 0;
+    const dpAmount = parseInt($(this).data("dp-amount")) || 0;
+
+    const peopleCount = minPeople;
+
+    // Simpan ke sessionStorage atau variabel global
+    sessionStorage.setItem("selectedService", JSON.stringify({
+        serviceId,
+        serviceTitle,
+        servicePrice,
+        maxPeople,
+        minPeople,
+        extraPricePerPerson,
+        dpAmount,
+        peopleCount
+    }));
+
+    // Simpan ke variabel global
+    window.selectedServicePrice = servicePrice;
+    window.maxPeople = maxPeople;
+    window.minPeople = minPeople;
+    window.extraPricePerPerson = extraPricePerPerson;
+    window.dpAmount = dpAmount;
+    window.peopleCount = peopleCount;
+
+    // Update UI
+    $("#summary-service").text(serviceTitle);
+    updatePeopleCountDisplay(); // menghitung total
+});
+
+
+// Variabel global dan updatePeopleCountDisplay tetap di luar supaya tidak hilang/reset
+const peopleCountEl = document.getElementById("people-count");
+const decreaseBtn = document.getElementById("decrease-btn");
+const increaseBtn = document.getElementById("increase-btn");
+
+window.peopleCount = 1;
+window.maxPeople = 1;
+window.minPeople = 1;
+window.selectedServicePrice = 0;
+window.extraPricePerPerson = 0;
+
+function updatePeopleCountDisplay() {
+    peopleCountEl.textContent = window.peopleCount;
+
+    const additionalPeople = window.peopleCount - window.minPeople;
+    const additionalFee = additionalPeople * window.extraPricePerPerson;
+    const total = window.selectedServicePrice + additionalFee;
+
+    // Update ringkasan utama
+    document.getElementById("summary-price").textContent = formatRupiah(total);
+
+    // Update ringkasan pembayaran
+    document.getElementById("original-price").textContent = formatRupiah(total);
+    document.getElementById("final-price").textContent = formatRupiah(total);
+
+    // Update DP dan sisa pembayaran kalau metode dp dipilih
+    const paymentMethod = document.getElementById("payment-method").value;
+
+    if (paymentMethod === "dp") {
+        document.getElementById("dp-row").classList.remove("d-none");
+        document.getElementById("sisa-row").classList.remove("d-none");
+
+        const dpAmount = window.dpAmount || 0;
+        const sisa = total - dpAmount;
+
+        document.getElementById("dp-amount").textContent = formatRupiah(dpAmount);
+        document.getElementById("sisa-payment").textContent = formatRupiah(sisa);
+    } else {
+        document.getElementById("dp-row").classList.add("d-none");
+        document.getElementById("sisa-row").classList.add("d-none");
+    }
+        basePrice = total;
+}
+document.getElementById("payment-method").addEventListener("change", () => {
+    updatePeopleCountDisplay();
+});
+
+
+decreaseBtn.addEventListener("click", () => {
+    if (window.peopleCount > window.minPeople) {
+        window.peopleCount--;
+        updatePeopleCountDisplay();
+    }
+});
+
+increaseBtn.addEventListener("click", () => {
+    if (window.peopleCount < window.maxPeople) {
+        window.peopleCount++;
+        updatePeopleCountDisplay();
+    }
+    // ... semua kode kamu di atas
+
+document.addEventListener("DOMContentLoaded", function () {
+  basePrice = window.selectedServicePrice || 0;
+  updatePaymentSummary();
+});
+
+});
+
 
 
 
@@ -727,14 +977,14 @@ function updateServicesStep(categoryId) {
                             });
                         } else {
                             $("#employees-container").html(
-                                '<div class="col-12 text-center py-5"><p>No employees available for this service.</p></div>'
+                                '<div class="col-12 text-center w-100 py-5"><p>No employees available for this service.</p></div>'
                             );
                         }
                     },
                     error: function(xhr) {
                         console.error(xhr);
                         $("#employees-container").html(
-                            '<div class="col-12 text-center py-5"><p>Error loading employees. Please try again.</p></div>'
+                            '<div class="col-12 text-center w-100 py-5"><p>Error loading employees. Please try again.</p></div>'
                         );
                     }
                 });
@@ -963,7 +1213,7 @@ function updateServicesStep(categoryId) {
                     },
                     error: function(xhr) {
                         $("#time-slots-container").html(`
-                            <div class="text-center py-4">
+                            <div class="text-center w-100 py-4">
                                 <div class="alert alert-danger">
                                     <i class="bi bi-exclamation-octagon me-2"></i>
                                     Error loading availability
@@ -990,8 +1240,9 @@ function updateServicesStep(categoryId) {
                 if (bookingState.selectedService) {
                     $("#summary-service").text(
                         `${bookingState.selectedService.title} (${bookingState.selectedService.price})`);
-                    $("#summary-duration").text(`${bookingState.selectedEmployee.slot_duration} minutes`);
+                    $("#summary-duration").text(`${bookingState.selectedEmployee.slot_duration} menit`);
                     $("#summary-price").text(bookingState.selectedService.price);
+                    $("#summary-max-people").text(bookingState.selectedService.max_people + " orang");
                 }
 
                 // Update employee info
@@ -1018,11 +1269,17 @@ function updateServicesStep(categoryId) {
             // function submitBooking() {
 
             function submitBooking() {
-    // Get form data
     const form = $('#customer-info-form');
-    const csrfToken = form.find('input[name="_token"]').val(); // Get CSRF token from form
+    const csrfToken = form.find('input[name="_token"]').val();
 
-    // Prepare booking data
+    // Ambil metode pembayaran (dp/cash)
+    const paymentMethod = $('#payment-method').val();
+    const totalAmount = parseInt(document.getElementById("summary-price").textContent.replace(/[^0-9]/g, ''), 10);
+
+    // DP sesuai service, fallback 50% jika tidak ada
+    const dpAmount = bookingState.selectedService.dp_amount || Math.round(totalAmount / 2);
+    const paymentAmount = paymentMethod === 'dp' ? dpAmount : totalAmount;
+
     const bookingData = {
         employee_id: bookingState.selectedEmployee.id,
         service_id: bookingState.selectedService.id,
@@ -1030,10 +1287,14 @@ function updateServicesStep(categoryId) {
         email: $('#customer-email').val(),
         phone: $('#customer-phone').val(),
         notes: $('#customer-notes').val(),
-        amount: parseInt(bookingState.selectedService.price.replace(/[^0-9]/g, ''), 10),
+        amount: paymentAmount,          // jumlah bayar sekarang
+        total_amount: totalAmount,      // total booking
+        people_count: parseInt(document.getElementById("people-count").textContent, 10),
         booking_date: bookingState.selectedDate,
         booking_time: bookingState.selectedTime.start || bookingState.selectedTime,
-        status: 'Confirmed',
+        status: 'Pending',              // booking status awal
+        payment_method: 'Midtrans',
+        payment_status: paymentMethod === 'dp' ? 'DP' : 'Pending', 
         _token: csrfToken
     };
 
@@ -1042,69 +1303,33 @@ function updateServicesStep(categoryId) {
     }
 
     const nextBtn = $("#next-step");
-    nextBtn.prop('disabled', true).html(
-        '<span class="spinner-border spinner-border-sm" role="status"></span> Processing...'
-    );
+    nextBtn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span> Processing...');
 
-    // Step 1: Get Snap Token from server
+    // 1️⃣ Dapatkan Snap Token dari server
     $.ajax({
         url: '/midtrans/token',
         method: 'POST',
         data: bookingData,
         success: function(response) {
-        const snapToken = response.token;
+            const snapToken = response.token;
 
-        console.log("Snap Token:", snapToken); 
-        console.log("Transaksi URL:", `https://app.sandbox.midtrans.com/snap/v2/vtweb/${snapToken}`);
-
-
-            // Step 2: Open Snap payment popup
+            // 2️⃣ Snap Popup
             snap.pay(snapToken, {
                 onSuccess: function(result) {
-                    // Step 3: Save booking to database
-                    bookingData.payment_result = JSON.stringify(result); // Optional: save result
+                    bookingData.payment_result = JSON.stringify(result);
+                    bookingData.midtrans_order_id = result.order_id || result.transaction_id;
+                    bookingData.payment_status = paymentMethod === 'dp' ? 'DP' : 'Paid';
 
-                    $.ajax({
-                        url: '/bookings',
-                        method: 'POST',
-                        data: bookingData,
-                        success: function(response) {
-                            const formattedDate = new Date(bookingState.selectedDate).toLocaleDateString(
-                                'id-ID', {
-                                    weekday: 'long',
-                                    year: 'numeric',
-                                    month: 'long',
-                                    day: 'numeric'
-                                });
-
-                            const bookingDetails = `
-                                <div class="mb-2"><strong>Customer:</strong> ${$("#customer-name").val()}</div>
-                                <div class="mb-2"><strong>Service:</strong> ${bookingState.selectedService.title}</div>
-                                <div class="mb-2"><strong>Staff:</strong> ${bookingState.selectedEmployee.user.name}</div>
-                                <div class="mb-2"><strong>Date & Time:</strong> ${formattedDate} pukul ${bookingState.selectedTime.display || bookingState.selectedTime}</div>
-                                <div class="mb-2"><strong>Amount:</strong> ${bookingState.selectedService.price}</div>
-                                <div><strong>Reference:</strong> ${response.booking_id || 'BK-' + Math.random().toString(36).substr(2, 8).toUpperCase()}</div>
-                            `;
-
-                            $('#modal-booking-details').html(bookingDetails);
-
-                            const successModal = new bootstrap.Modal('#bookingSuccessModal');
-                            successModal.show();
-
-                            setTimeout(resetBooking, 1000);
-                        },
-                        error: function(xhr) {
-                            alert('Booking failed after payment. Please contact support.');
-                        },
-                        complete: function() {
-                            nextBtn.prop('disabled', false).html('Confirm Booking <i class="bi bi-check-circle"></i>');
-                        }
-                    });
+                    saveBooking(bookingData);
                 },
                 onPending: function(result) {
-                    alert('Waiting for payment confirmation...');
+                    bookingData.payment_result = JSON.stringify(result);
+                    bookingData.midtrans_order_id = result.order_id || result.transaction_id;
+                    bookingData.payment_status = 'Pending';
+
+                    saveBooking(bookingData);
                 },
-                onError: function(result) {
+                onError: function() {
                     alert('Payment failed. Please try again.');
                     nextBtn.prop('disabled', false).html('Confirm Booking <i class="bi bi-check-circle"></i>');
                 },
@@ -1114,39 +1339,198 @@ function updateServicesStep(categoryId) {
                 }
             });
         },
-        error: function(xhr) {
-            alert('Failed to initiate payment. Please try again.');
+        error: function() {
+            alert('Failed to initiate payment.');
             nextBtn.prop('disabled', false).html('Confirm Booking <i class="bi bi-check-circle"></i>');
         }
     });
 }
 
+// 3️⃣ Simpan booking dan transaction
+function saveBooking(data) {
+    $.ajax({
+        url: '/bookings',
+        method: 'POST',
+        data: data,
+        success: function(res) {
+            window.location.href = '/transactions';
+        },
+        error: function(xhr) {
+            console.log(xhr.responseJSON);
+            alert('Booking failed. Please contact support.');
+            $("#next-step").prop('disabled', false).html('Confirm Booking <i class="bi bi-check-circle"></i>');
+        }
+    });
+}
 
-            function resetBooking() {
-                // Reset booking state
-                bookingState = {
-                    currentStep: 1,
-                    selectedCategory: null,
-                    selectedService: null,
-                    selectedEmployee: null,
-                    selectedDate: null,
-                    selectedTime: null
-                };
 
-                // Reset UI
-                $(".category-card, .service-card, .employee-card, .calendar-day, .time-slot").removeClass(
-                    "selected");
-                $("#customer-info-form")[0].reset();
-
-                // Go to first step
-                goToStep(1);
-            }
         });
     </script>
 
     @if ($setting->footer)
         {!! $setting->footer !!}
     @endif
+<script>
+  const summaryPriceEl = document.getElementById("summary-price");
+  const originalPriceEl = document.getElementById("original-price");
+  const finalPriceEl = document.getElementById("final-price");
+  const discountRow = document.getElementById("discount-row");
+  const discountAmountEl = document.getElementById("discount-amount");
+
+  const dpRow = document.getElementById("dp-row");
+  const sisaRow = document.getElementById("sisa-row");
+  const dpAmountEl = document.getElementById("dp-amount");
+  const sisaPaymentEl = document.getElementById("sisa-payment");
+
+  const paymentMethodEl = document.getElementById("payment-method");
+  const couponInput = document.getElementById("coupon-code");
+  const applyCouponBtn = document.getElementById("apply-coupon");
+  const couponSuccessMsg = document.getElementById("coupon-success-msg");
+  const couponErrorMsg = document.getElementById("coupon-error-msg");
+
+  let basePrice = 0;         // Harga asli, di-set dari server atau hasil kalkulasi
+  let discountValue = 0;     // Nilai diskon kupon
+
+ function formatRupiah(number) {
+  return new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+    minimumFractionDigits: 0,  // hilangkan desimal jika nol
+    maximumFractionDigits: 0
+  }).format(number);
+}
+
+  function updatePaymentSummary() {
+  let priceAfterDiscount = basePrice - discountValue;
+  if (priceAfterDiscount < 0) priceAfterDiscount = 0;
+
+  originalPriceEl.textContent = formatRupiah(basePrice);
+  summaryPriceEl.textContent = formatRupiah(priceAfterDiscount);
+
+  if (discountValue > 0) {
+    discountRow.classList.remove("d-none");
+    discountAmountEl.textContent = `- ${formatRupiah(discountValue)}`;
+
+    // Tampilkan baris total setelah diskon
+    finalPriceEl.textContent = formatRupiah(priceAfterDiscount);
+    finalPriceEl.parentElement.classList.remove("d-none");
+  } else {
+    discountRow.classList.add("d-none");
+
+    // Sembunyikan baris total setelah diskon jika tidak ada diskon
+    finalPriceEl.parentElement.classList.add("d-none");
+  }
+
+  const method = paymentMethodEl.value;
+  if (method === "dp") {
+    const dp = window.dpAmount || Math.round(priceAfterDiscount / 2);
+    const sisa = priceAfterDiscount - dp;
+    dpRow.classList.remove("d-none");
+    sisaRow.classList.remove("d-none");
+    dpAmountEl.textContent = formatRupiah(dp);
+    sisaPaymentEl.textContent = formatRupiah(sisa);
+  } else {
+    dpRow.classList.add("d-none");
+    sisaRow.classList.add("d-none");
+  }
+}
+
+
+  async function applyCoupon() {
+    const code = couponInput.value.trim().toUpperCase();
+
+    if (!code) {
+      alert("Masukkan kode kupon!");
+      return;
+    }
+
+    // Reset pesan notifikasi
+    couponSuccessMsg.classList.add("d-none");
+    couponErrorMsg.classList.add("d-none");
+
+    try {
+      const response = await fetch('/validate-coupon', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({ code })
+      });
+
+      if (!response.ok) throw new Error("Kupon tidak valid");
+
+      const data = await response.json();
+
+      // Sesuaikan tipe kupon dari backend
+      if (data.type === "percent") {
+        discountValue = Math.round(basePrice * (data.value / 100));
+      } else if (data.type === "fixed") {
+        discountValue = data.value;
+      } else {
+        discountValue = 0;
+      }
+
+      couponSuccessMsg.classList.remove("d-none");
+      couponErrorMsg.classList.add("d-none");
+      updatePaymentSummary();
+
+    } catch (error) {
+      couponSuccessMsg.classList.add("d-none");
+      couponErrorMsg.classList.remove("d-none");
+      console.error("Error validasi kupon:", error);
+    }
+  }
+
+  applyCouponBtn.addEventListener("click", applyCoupon);
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const originalText = originalPriceEl.textContent.replace(/[^\d]/g, '');
+    basePrice = parseInt(originalText) || 0;
+    updatePaymentSummary();
+  });
+
+  // deklarasi variabel, fungsi formatRupiah(), updatePaymentSummary(), applyCoupon(), dll
+
+// Tambahkan listener perubahan metode pembayaran
+paymentMethodEl.addEventListener('change', () => {
+  couponInput.value = '';
+  discountValue = 0;
+  couponSuccessMsg.classList.add('d-none');
+  couponErrorMsg.classList.add('d-none');
+  updatePaymentSummary();
+});
+
+// Listener tombol apply kupon
+applyCouponBtn.addEventListener("click", applyCoupon);
+
+// Listener DOMContentLoaded
+document.addEventListener("DOMContentLoaded", function () {
+  const originalText = originalPriceEl.textContent.replace(/[^\d]/g, '');
+  basePrice = parseInt(originalText) || 0;
+  updatePaymentSummary();
+});
+
+const prevStepBtn = document.getElementById('prev-step');
+
+if (prevStepBtn) {
+  prevStepBtn.addEventListener('click', () => {
+    // Reset input kupon
+    couponInput.value = '';
+
+    // Reset diskon
+    discountValue = 0;
+
+    // Sembunyikan pesan sukses dan error kupon
+    couponSuccessMsg.classList.add('d-none');
+    couponErrorMsg.classList.add('d-none');
+
+    // Update tampilan ringkasan pembayaran
+    updatePaymentSummary();
+  });
+}
+
+</script>
 
 </body>
 

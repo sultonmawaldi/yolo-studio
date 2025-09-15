@@ -426,13 +426,13 @@
             });
 
             // Bind change and add-more events to all days
-            ['Senin',
-            'Selasa',
-            'Rabu',
-            'Kamis',
-            'Jumat',
-            'Sabtu',
-            'Minggu',].forEach(function(day) {
+            ['monday',
+            'tuesday',
+            'wednesday',
+            'thusrday',
+            'friday',
+            'saturday',
+            'sunday',].forEach(function(day) {
                 $('#' + day).on('change', function() {
                     toggleDayFields(day);
                 }).trigger('change');

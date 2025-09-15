@@ -1,5 +1,5 @@
 :root {
-    --primary-color: #5bc0de;
+    --primary-color: #00bcd4;
     --secondary-color: #f8f9fc;
     --accent-color: #2e59d9;
     --text-color: #5a5c69;
@@ -135,10 +135,45 @@ body {
     color: var(--primary-color);
 }
 
+.modern-card {
+    border-radius: 20px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.modern-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+}
+
+.modern-card .card-header {
+    background: #f8f9fa; /* abu-abu terang default Bootstrap */
+    color: #212529; /* teks gelap elegan */
+    border-bottom: 1px solid #dee2e6;
+    padding: 16px;
+}
+
+.modern-card .card-header h5 {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+#selected-date-display {
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+#time-slots-container {
+    max-height: 350px; /* tinggi maksimum */
+    overflow-y: auto; /* scroll vertikal */
+}
+
 .time-slot {
     cursor: pointer;
     transition: all 0.2s ease;
-    border: 1px solid #25d366;
+    border: 1.2px solid #0b6623;
     border-radius: 25px;
     padding: 8px 12px;
     margin: 5px 0; /* hanya vertikal */
@@ -165,41 +200,72 @@ body {
     background-color: #f8f9fa;
 }
 
+/* Calendar Day Modern */
 .calendar-day {
     cursor: pointer;
-    transition: all 0.2s ease;
-    border-radius: 5%;
+    transition: all 0.25s ease;
+    border-radius: 12px; /* lebih rounded */
+    padding: 12px;
+    font-weight: 500;
+    color: #333;
 }
 
 .calendar-day:hover:not(.disabled) {
-    background-color: rgba(78, 115, 223, 0.1);
+    background-color: rgba(37, 211, 102, 0.12); /* hijau lembut */
+    color: #25d366;
+    transform: translateY(-2px); /* efek hover modern */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
 .calendar-day.selected {
     background-color: var(--primary-color);
-    color: white;
+    color: #fff;
+    font-weight: 600;
+    box-shadow: 0 3px 8px rgba(37, 211, 102, 0.3);
 }
 
 .calendar-day.disabled {
-    opacity: 0.5;
+    opacity: 0.4;
     cursor: not-allowed;
-    background-color: #f8f9fa;
+    background-color: #f1f1f1;
+    color: #999;
+    text-decoration: line-through;
 }
 
+.btn-dark:hover {
+    background-color: #000;
+    transform: scale(1.05);
+    transition: all 0.15s ease;
+}
+
+.btn-dark:active {
+    transform: scale(0.95);
+}
+
+/* Summary Item Modern */
 .summary-item {
     margin-bottom: 15px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid #e3e6f0;
+    padding: 12px 0;
+    border-bottom: 1px solid #ececec;
+    font-size: 0.95rem;
+    color: #444;
 }
 
+.summary-item:last-child {
+    border-bottom: none;
+}
+
+/* Modern Arrows */
 .modern-arrow {
     font-size: 1.8rem;
     color: var(--primary-color);
-    transition: transform 0.2s ease;
+    transition: all 0.25s ease;
+    cursor: pointer;
 }
 
 .modern-arrow:hover {
-    transform: scale(1.1);
+    transform: scale(1.15) rotate(3deg);
+    color: #128c7e; /* hijau gelap */
 }
 
 @keyframes fadeIn {

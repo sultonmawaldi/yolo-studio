@@ -16,13 +16,13 @@ class ProfileController extends Controller
         $user = Auth::user();
          // Available days of the week
          $days = [
-            'Senin',
-            'Selasa',
-            'Rabu',
-            'Kamis',
-            'Jumat',
-            'Sabtu',
-            'Minggu',
+            'monday',
+            'tuesday',
+            'wednesday',
+            'thusrday',
+            'friday',
+            'saturday',
+            'sunday',
         ];
 
         // Available slot duration steps

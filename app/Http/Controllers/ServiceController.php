@@ -51,6 +51,10 @@ class ServiceController extends Controller
             'meta_keywords'     => 'nullable',
             'price'             => 'required|numeric|min:0', // Validation for price field
             'sale_price'        => 'nullable|numeric|min:0', // Validation for price field
+            'max_people'        => 'required|integer|min:1',
+            'min_people'        => 'nullable|integer|min:0',
+            'extra_price_per_person' => 'nullable|numeric|min:0',
+            'dp_amount'         => 'required|integer|min:0',
             'featured'          => 'nullable',
             'status'            => 'nullable',
             'other'             => 'nullable',
@@ -105,6 +109,10 @@ class ServiceController extends Controller
             'meta_keywords'     => 'nullable',
             'price'             => 'required|numeric|min:0', // Validation for price field
             'sale_price'        => 'nullable|numeric|min:0', // Validation for price field
+            'max_people'        => 'required|integer|min:1',
+            'min_people'        => 'nullable|integer|min:0',
+            'extra_price_per_person' => 'nullable|numeric|min:0',
+            'dp_amount'         => 'required|integer|min:0',
             'featured'          => 'nullable',
             'status'            => 'nullable',
             'other'             => 'nullable',
@@ -173,8 +181,8 @@ class ServiceController extends Controller
 
             // Remove image
             $destination = public_path('uploads/images/service/') . $service->image;
-            if (\File::exists($destination)) {
-                \File::delete($destination);
+            if (File::exists($destination)) {
+                File::delete($destination);
             }
 
             $service->forceDelete();

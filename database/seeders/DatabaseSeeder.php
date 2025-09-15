@@ -67,6 +67,12 @@ class DatabaseSeeder extends Seeder
             'services.edit',
             'services.delete',
 
+            // coupons Management
+            'coupons.view',
+            'coupons.create',
+            'coupons.edit',
+            'coupons.delete',
+
             // Settings
             'settings.edit'
         ];
@@ -124,12 +130,13 @@ class DatabaseSeeder extends Seeder
         $employee = Employee::create([
             'user_id' => $user->id,
             'days' => [
-                "Senin" => ["06:00-22:00"],
-                "Selasa" => ["06:00-15:00", "16:00-22:00"],
-                "Rabu" => ["09:00-12:00", "14:00-23:00"],
-                "Kamis" => ["09:00-20:00"],
-                "Jumat" => ["06:00-17:00"],
-                "Sabtu" => ["05:00-18:00"]
+                "monday" => ["06:00-22:00"],
+                "tuesday" => ["06:00-15:00", "16:00-22:00"],
+                "wednesday" => ["09:00-12:00", "14:00-23:00"],
+                "thursday" => ["09:00-20:00"],
+                "friday" => ["06:00-17:00"],
+                "saturday" => ["05:00-18:00"],
+                "sunday" => ["05:00-18:00"]
             ],
             'slot_duration' => 30
         ]);

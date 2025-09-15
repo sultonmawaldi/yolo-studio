@@ -29,13 +29,13 @@ class UserController extends Controller
     public function create()
     {
         $days = [
-            'Senin',
-            'Selasa',
-            'Rabu',
-            'Kamis',
-            'Jumat',
-            'Sabtu',
-            'Minggu',
+            'monday',
+            'tuesday',
+            'wednesday',
+            'thusrday',
+            'friday',
+            'saturday',
+            'sunday',
         ];
 
         //$roles = Role::where('name', '!=', 'admin')->get();
@@ -112,13 +112,13 @@ class UserController extends Controller
 
         // Available days of the week
         $days = [
-            'Senin',
-            'Selasa',
-            'Rabu',
-            'Kamis',
-            'Jumat',
-            'Sabtu',
-            'Minggu',
+            'monday',
+            'tuesday',
+            'wednesday',
+            'thusrday',
+            'friday',
+            'saturday',
+            'sunday',
         ];
 
         // Available slot duration steps

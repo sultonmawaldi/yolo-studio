@@ -89,7 +89,7 @@
                             </div> --}}
                         </div>
                         <!-- /.card-body -->
-                    </div>
+                        </div>
                     <div class="card card-light">
                         <div class="card-header">
                             <h3 class="card-title">Price
@@ -109,7 +109,7 @@
                                 <div class="form-group">
                                     <label class="mb-0" for="price">Price</label>
                                     <input class="form-control" type="number" name="price" placeholder="Price"
-                                        value="{{ old('price',$service->price) }}">
+                                        value="{{ old('price') }}">
                                         <p class="mb-0 text-muted small">Main Price</p>
                                     @error('price')
                                         <span class="text-danger">
@@ -122,7 +122,7 @@
                                 <div class="form-group">
                                     <label class="mb-0" for="sale_price">Sale Price</label>
                                     <input class="form-control" type="number" name="sale_price" placeholder="Price"
-                                        value="{{ old('sale_price',$service->sale_price) }}">
+                                        value="{{ old('sale_price') }}">
                                         <p class="mb-0 text-muted small">Price for sale</p>
                                     @error('sale_price')
                                         <span class="text-danger">
@@ -131,10 +131,82 @@
                                     @enderror
                                 </div>
                             </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="mb-0" for="extra_price_per_person">Harga Tambahan Per Orang</label>
+                                    <input class="form-control" type="number" name="extra_price_per_person" placeholder="Price"
+                                        value="{{ old('extra_price_per_person') }}">
+                                        <p class="mb-0 text-muted small">Price for sale</p>
+                                    @error('extra_price_per_person')
+                                        <span class="text-danger">
+                                            {{ $message }}
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="mb-0" for="max_people">Dp Amount</label>
+                                <input class="form-control" type="number" name="dp_amount" id="dp_amount" min="1" placeholder="Down Payment"
+                                    value="{{ old('dp_amount', 1) }}">
+                                <p class="mb-0 text-muted small">Maximum number of people allowed for this service</p>
+                                @error('dp_amount')
+                                    <span class="text-danger">
+                                        {{ $message }}
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
                           </div>
                         </div>
                         <!-- /.card-body -->
                     </div>
+                    <div class="card card-light">
+                        <div class="card-header">
+                            <h3 class="card-title">Jumlah Orang
+                            </h3>
+
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                                    <i class="fas fa-minus" aria-hidden="true">
+                                    </i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                          <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="mb-0" for="max_people">Max People</label>
+                                    <input class="form-control" type="number" name="max_people" id="max_people" min="1" placeholder="Max number of people"
+                                        value="{{ old('max_people', 1) }}">
+                                    <p class="mb-0 text-muted small">Maximum number of people allowed for this service</p>
+                                    @error('max_people')
+                                        <span class="text-danger">
+                                            {{ $message }}
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="mb-0" for="min_people">Min People</label>
+                                    <input class="form-control" type="number" name="min_people" id="min_people" min="1" placeholder="Min number of people"
+                                        value="{{ old('min_people', 1) }}">
+                                    <p class="mb-0 text-muted small">Maximum number of people allowed for this service</p>
+                                    @error('min_people')
+                                        <span class="text-danger">
+                                            {{ $message }}
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                          </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    
                     <div class="card card-light">
                         <div class="card-header">
                             <h3 class="card-title">Excerpt

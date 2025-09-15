@@ -66,7 +66,27 @@ $(document).ready(function () {
 
     $("#prev-step").click(function () {
         if (bookingState.currentStep > 1) {
-            goToStep(bookingState.currentStep - 1);
+            const prevStep = bookingState.currentStep - 1;
+
+            // Jika kembali ke step sebelum step 5, reset peopleCount
+            if (bookingState.currentStep === 5) {
+                window.peopleCount = window.minPeople || 1;
+
+                // Update sessionStorage agar konsisten
+                let stored = JSON.parse(
+                    sessionStorage.getItem("selectedService") || "{}"
+                );
+                stored.peopleCount = window.peopleCount;
+                sessionStorage.setItem(
+                    "selectedService",
+                    JSON.stringify(stored)
+                );
+
+                // Update tampilan jumlah dan harga
+                updatePeopleCountDisplay();
+            }
+
+            goToStep(prevStep);
         }
     });
 
@@ -98,6 +118,10 @@ $(document).ready(function () {
         const serviceTitle = $(this).find(".card-title").text();
         // const servicePrice = $(this).find('.fw-bold').text().replace('$', '');
         const servicePrice = $(this).find(".fw-bold").text();
+        const maxPeople = $(this).data("max-people");
+        const minPeople = $(this).data("min-people");
+        const extraPricePerPerson = $(this).data("extra-price");
+        const dpAmount = parseInt($(this).data("dp-amount") || 0);
         const serviceDuration = $(this)
             .find('.card-text:contains("Duration:")')
             .text()
@@ -109,6 +133,10 @@ $(document).ready(function () {
             title: serviceTitle,
             price: servicePrice,
             duration: serviceDuration,
+            max_people: maxPeople,
+            min_people: minPeople,
+            extra_price_per_person: extraPricePerPerson,
+            dp_amount: dpAmount,
         };
 
         // Reset subsequent selections
@@ -345,6 +373,9 @@ $(document).ready(function () {
                                                     service.excerpt
                                                 }</p>
                                                 <p class="card-text">${priceDisplay}</p>
+                                                <p class="card-text"><small class="text-muted">Jumlah Maksimal : ${
+                                                    service.max_people ?? "-"
+                                                } Orang</small></p>
                                             </div>
                                         </div>
                                     </div>
@@ -737,9 +768,12 @@ $(document).ready(function () {
                 `${bookingState.selectedService.title} (${bookingState.selectedService.price})`
             );
             $("#summary-duration").text(
-                `${bookingState.selectedEmployee.slot_duration} minutes`
+                `${bookingState.selectedEmployee.slot_duration} menit`
             );
             $("#summary-price").text(bookingState.selectedService.price);
+            $("#summary-max-people").text(
+                bookingState.selectedService.max_people + " orang"
+            );
         }
 
         // Update employee info

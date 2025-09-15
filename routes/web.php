@@ -13,8 +13,11 @@ use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PaymentController;
-use App\Http\Controllers\OrderController;
+use App\Http\Controllers\CouponController;
 use Illuminate\Http\Request;
+use App\Models\Coupon;
+use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\MidtransController;
 
 
 Auth::routes();
@@ -24,6 +27,47 @@ Route::get('/',[FrontendController::class,'index'])->name('home');
 Route::middleware(['auth'])->group(function () {
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+Route::middleware(['auth'])->group(function () {
+
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    // Coupons tanpa role:admin, hanya auth dan permission
+    Route::prefix('coupons')->name('coupons.')->group(function () {
+
+        Route::get('/', [CouponController::class, 'index'])
+            ->name('index')
+            ->middleware('permission:coupons.view');
+
+        Route::get('/create', [CouponController::class, 'create'])
+            ->name('create')
+            ->middleware('permission:coupons.create');
+
+        Route::post('/', [CouponController::class, 'store'])
+            ->name('store')
+            ->middleware('permission:coupons.create');
+
+        Route::get('/{coupon}/edit', [CouponController::class, 'edit'])
+            ->name('edit')
+            ->middleware('permission:coupons.edit');
+
+        Route::put('/{coupon}', [CouponController::class, 'update'])
+            ->name('update')
+            ->middleware('permission:coupons.edit');
+
+        Route::delete('/{coupon}', [CouponController::class, 'destroy'])
+            ->name('destroy')
+            ->middleware('permission:coupons.delete');
+
+    });
+
+    // ... route lainnya tetap sama ...
+
+});
+
+
+
+
 
     //user
     Route::resource('user',UserController::class)->middleware('permission:users.view| users.create | users.edit | users.delete');
@@ -93,7 +137,8 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard
 
 });
 
-
+//transaction
+Route::resource('transactions', TransactionController::class)->middleware('auth');
 
 //frontend routes
 //fetch services from categories
@@ -117,6 +162,50 @@ Route::post('/update-status', [DashboardController::class, 'updateStatus'])->nam
 
 //payment
 Route::post('/midtrans/token', [PaymentController::class, 'getSnapToken']);
+
+//webhook
+Route::post('/midtrans/notification', [MidtransController::class, 'notificationHandler']);
+
+Route::get('/transactions/history', [TransactionController::class, 'history'])
+     ->name('transactions.history')
+     ->middleware('auth');
+
+
+//coupon
+Route::post('/validate-coupon', function (Request $request) {
+    $request->validate([
+        'code' => 'required|string'
+    ]);
+
+    $coupon = Coupon::where('code', strtoupper($request->code))
+        ->where('active', true)
+        ->where(function ($query) {
+            $query->whereNull('expiry_date')->orWhere('expiry_date', '>=', now());
+        })
+        ->first();
+
+    if (!$coupon) {
+        return response()->json(['message' => 'Kupon tidak valid.'], 404);
+    }
+
+    return response()->json([
+        'type' => $coupon->type,
+        'value' => $coupon->value
+    ]);
+});
+
+//transaksi
+
+// User booking → buat transaksi (pakai AJAX)
+Route::post('/transactions/store', [TransactionController::class, 'store'])->name('transactions.store');
+
+// Callback Midtrans (pastikan URL ini di-set di dashboard Midtrans)
+Route::post('/midtrans/callback', [TransactionController::class, 'callback'])->name('midtrans.callback');
+
+// History transaksi (hanya user login)
+Route::middleware('auth')->group(function () {
+    Route::get('/transactions/history', [TransactionController::class, 'history'])->name('transactions.history');
+});
 
 
 

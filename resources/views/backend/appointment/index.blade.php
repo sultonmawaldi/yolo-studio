@@ -32,6 +32,7 @@
                         <p><strong>Service:</strong> <span id="modalService">N/A</span></p>
                         <p><strong>Email:</strong> <span id="modalEmail">N/A</span></p>
                         <p><strong>Phone:</strong> <span id="modalPhone">N/A</span></p>
+                        <p><strong>Jumlah Orang:</strong> <span id="modalPeopleCount">N/A</span></p>
                         <p><strong>Staff:</strong> <span id="modalStaff">N/A</span></p>
                         <p><strong>Start:</strong> <span id="modalStartTime">N/A</span></p>
                         <p><strong>Amount:</strong> <span id="modalAmount">N/A</span></p>
@@ -42,7 +43,7 @@
                         <div class="form-group ">
                             <label><strong>Status:</strong></label>
                             <select name="status" class="form-control" id="modalStatusSelect">
-                                <option value="Pending payment">Pending payment</option>
+                                <option value="Pending">Pending payment</option>
                                 <option value="Processing">Processing</option>
                                 <option value="Confirmed">Confirmed</option>
                                 <option value="Cancelled">Cancelled</option>
@@ -114,7 +115,9 @@
                                                 Time
                                             </th>
 
-
+                                            <th style="width: 10%">
+                                                Jumlah Orang
+                                            </th>
                                             <th style="width: 15%" class="text-center">
                                                 Status
                                             </th>
@@ -126,7 +129,7 @@
                                     <tbody>
                                         @php
                                             $statusColors = [
-                                                'Pending payment' => '#f39c12',
+                                                'Pending' => '#f39c12',
                                                 'Processing' => '#3498db',
                                                 'Confirmed' => '#2ecc71',
                                                 'Cancelled' => '#ff0000',
@@ -169,6 +172,8 @@
                                                 <td>
                                                     {{ $appointment->booking_time }}
                                                 </td>
+                                                <td>{{ $appointment->people_count ?? '-' }}
+                                                </td>
                                                 <td>
                                                     @php
                                                         $status = $appointment->status;
@@ -187,6 +192,7 @@
                                                         data-service="{{ $appointment->service->title ?? 'MA' }}"
                                                         data-email="{{ $appointment->email }}"
                                                         data-phone="{{ $appointment->phone }}"
+                                                        data-people="{{ $appointment->people_count ?? '-' }}"
                                                         data-employee="{{ $appointment->employee->user->name }}"
                                                         data-start="{{ $appointment->booking_date . ' ' . $appointment->booking_time }}"
                                                         data-amount="{{ $appointment->amount }}"
@@ -243,6 +249,7 @@
             $('#modalService').text($(this).data('service'));
             $('#modalEmail').text($(this).data('email'));
             $('#modalPhone').text($(this).data('phone'));
+            $('#modalPeopleCount').text($(this).data('people'));
             $('#modalStaff').text($(this).data('employee'));
             $('#modalStartTime').text($(this).data('start'));
             $('#modalAmount').text($(this).data('amount'));
@@ -254,7 +261,7 @@
 
             // Set status badge
             var statusColors = {
-                'Pending payment': '#f39c12',
+                'Pending': '#f39c12',
                 'Processing': '#3498db',
                 'Confirmed': '#2ecc71',
                 'Cancelled': '#ff0000',
