@@ -3,10 +3,11 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use App\Models\Setting;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Config;
-use View;
+use Midtrans\Config;
+use App\Models\Transaction;
+use App\Observers\TransactionObserver;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -15,9 +16,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->singleton(PaymentMethodService::class, function ($app) {
-            return new PaymentMethodService();
-        });
+        // Daftarkan PaymentMethodService sebagai singleton
+        
     }
 
     /**
@@ -25,10 +25,21 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-          Gate::before(function ($user, $ability) {
-            return $user->id == 1 ? true : null;
+        // Super admin (id=1) otomatis punya semua permission
+        Gate::before(function ($user, $ability) {
+            return $user->id === 1 ? true : null;
         });
 
+        // Konfigurasi Midtrans jika tersedia
+        if (config('midtrans.server_key') && config('midtrans.client_key')) {
+            Config::$serverKey    = config('midtrans.server_key');
+            Config::$clientKey    = config('midtrans.client_key');
+            Config::$isProduction = (bool) config('midtrans.is_production', false);
+            Config::$isSanitized  = config('midtrans.is_sanitized', true);
+            Config::$is3ds        = config('midtrans.is_3ds', true);
+        }
 
+        // Daftarkan TransactionObserver
+        Transaction::observe(TransactionObserver::class);
     }
 }

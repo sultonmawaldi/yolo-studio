@@ -43,13 +43,13 @@
                         <div class="form-group ">
                             <label><strong>Status:</strong></label>
                             <select name="status" class="form-control" id="modalStatusSelect">
-                                <option value="Pending">Pending payment</option>
+                                <option value="Pending">Pending</option>
                                 <option value="Processing">Processing</option>
                                 <option value="Confirmed">Confirmed</option>
                                 <option value="Cancelled">Cancelled</option>
                                 <option value="Completed">Completed</option>
                                 <option value="On Hold">On Hold</option>
-                                {{-- <option value="Rescheduled">Rescheduled</option> --}}
+                                <option value="Rescheduled">Rescheduled</option>
                                 <option value="No Show">No Show</option>
                             </select>
                         </div>

@@ -9,7 +9,7 @@
         </div>
         <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-                <li class="breadcrumb-item"><a href="{{ route('bookings.index.status', ['status' => 0]) }}">Pending Payment
+                <li class="breadcrumb-item"><a href="{{ route('bookings.index.status', ['status' => 0]) }}">Pending
                         ()
                     </a> |</li>
                 <li class=""> &nbsp; <a href="{{ route('bookings.index.status', ['status' => 1]) }}">Paid

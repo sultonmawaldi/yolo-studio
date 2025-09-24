@@ -4,37 +4,52 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Transaction;
-use App\Models\Booking;
 use Illuminate\Support\Facades\Log;
 
 class MidtransController extends Controller
 {
     public function notificationHandler(Request $request)
 {
-    $payload = $request->all();
-    \Log::info('Midtrans Notification:', $payload);
+    Config::$serverKey    = config('midtrans.server_key');
+    Config::$isProduction = config('midtrans.is_production');
+    Config::$isSanitized  = config('midtrans.is_sanitized');
+    Config::$is3ds        = config('midtrans.is_3ds');
 
-    $transaction = Transaction::where('midtrans_order_id', $payload['order_id'])->first();
-    if(!$transaction) return response()->json(['message' => 'Transaction not found'], 404);
+    $notification = new \Midtrans\Notification();
 
-    switch($payload['transaction_status']) {
-        case 'capture':
-        case 'settlement':
-            $transaction->payment_status = 'Paid';
-            break;
-        case 'Pending':
-            $transaction->payment_status = 'Pending';
-            break;
-        case 'deny':
-        case 'cancel':
-        case 'expire':
-            $transaction->payment_status = 'Failed';
-            break;
+    $orderId  = $notification->order_id;
+    $status   = $notification->transaction_status;
+
+    $transaction = Transaction::where('transaction_code', $orderId)->first();
+    if (! $transaction) {
+        return response()->json(['message' => 'Transaction not found'], 404);
     }
 
-    $transaction->payload = $payload;
-    $transaction->save();
+    if ($status == 'capture' || $status == 'settlement') {
+        // kalau belum lunas berarti DP
+        if ($transaction->amount < $transaction->total_amount) {
+            $transaction->update([
+                'payment_status' => 'DP',
+            ]);
+            $transaction->appointment->update([
+                'status' => 'Processing',
+            ]);
+        } else {
+            // sudah lunas
+            $transaction->update([
+                'payment_status' => 'Paid',
+                'amount'         => $transaction->total_amount,
+            ]);
+            $transaction->appointment->update([
+                'status' => 'Confirmed',
+            ]);
+        }
+    } elseif (in_array($status, ['deny','expire','cancel'])) {
+        $transaction->update(['payment_status' => 'Failed']);
+        $transaction->appointment->update(['status' => 'Cancelled']);
+    }
 
     return response()->json(['message' => 'Notification processed']);
 }
+
 }

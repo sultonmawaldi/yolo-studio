@@ -55,8 +55,8 @@
                                     <div class="col-md-3">
                                         <label class="text-capitalize ">
                                             <input type="checkbox" name="permissions[]" value="{{ $permission->id }}"
-                                            {{ in_array($permission->id, $rolePermissions) ? 'checked' : '' }}
-                                            {{ ($roleName === 'admin' || $roleName === 'subscriber') ? 'disabled' : '' }}>
+                                                {{ in_array($permission->id, $rolePermissions) ? 'checked' : '' }}
+                                                {{ ($roleName === 'admin' || $roleName === 'member') ? 'disabled' : '' }}>
                                             {{ $permission->name }}
                                         </label>
                                     </div>

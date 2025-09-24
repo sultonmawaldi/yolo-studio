@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -11,17 +10,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Rappasoft\LaravelAuthenticationLog\Traits\AuthenticationLoggable;
 use Illuminate\Support\Facades\Auth;
 
-
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, HasRoles, SoftDeletes, AuthenticationLoggable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'name',
         'email',
@@ -29,24 +21,14 @@ class User extends Authenticatable
         'phone',
         'status',
         'image',
+        'role_uid',
     ];
 
-
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
@@ -55,67 +37,97 @@ class User extends Authenticatable
         ];
     }
 
+    /**
+     * Relasi ke data employee (jika ada)
+     */
     public function employee()
     {
         return $this->hasOne(Employee::class);
     }
 
+    /**
+     * Relasi many-to-many dengan services
+     */
     public function services()
     {
         return $this->belongsToMany(Service::class);
     }
 
-    public function adminlte_profile_url(){
+    /**
+     * Relasi ke appointments milik user
+     */
+    public function appointments()
+    {
+        return $this->hasMany(Appointment::class);
+    }
+
+    /**
+     * Relasi ke transaksi milik user
+     */
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
+    }
+
+    /**
+     * Relasi ke kupon milik user
+     */
+    public function coupons()
+    {
+        return $this->hasMany(Coupon::class, 'user_id');
+    }
+
+    /**
+     * URL profil untuk AdminLTE
+     */
+    public function adminlte_profile_url()
+    {
         return "/profile";
     }
 
+    /**
+     * Gambar user untuk AdminLTE
+     */
     public function adminlte_image()
     {
         $userImage = Auth::user()->image;
 
         if ($userImage) {
-            // Check if the image URL starts with 'https://'
             if (strpos($userImage, 'https://') === 0) {
-                // If it starts with 'https://', return the URL directly
                 return $userImage;
             } else {
-                // Otherwise, use the default public path
                 return asset('uploads/images/profile/' . $userImage);
             }
         } else {
-            // Default image if no user image is set
             return asset('vendor/adminlte/dist/img/gravtar.jpg');
         }
     }
 
+    /**
+     * Gambar profil user
+     */
     public function profileImage()
     {
         $userImage = $this->image;
 
         if (!empty($userImage)) {
             return asset('uploads/images/profile/' . $userImage);
-        }
-        else{
+        } else {
             return asset('vendor/adminlte/dist/img/gravtar.jpg');
         }
     }
 
-    //frontend user image for booking
+    /**
+     * Gambar employee (bisa sama dengan profile)
+     */
     public function employeeImage()
     {
         $userImage = $this->image;
 
         if (!empty($userImage)) {
             return asset('uploads/images/profile/' . $userImage);
-        }
-        else{
+        } else {
             return asset('vendor/adminlte/dist/img/gravtar.jpg');
         }
     }
-
-    public function appointments()
-    {
-        return $this->hasMany(Appointment::class);
-    }
-
 }

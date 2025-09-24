@@ -86,7 +86,8 @@ class DatabaseSeeder extends Seeder
         $adminRole = Role::firstOrCreate(['name' => 'admin']);
         $moderatorRole = Role::firstOrCreate(['name' => 'moderator']);
         $employeeRole = Role::firstOrCreate(['name' => 'employee']);
-        $subscriberRole = Role::firstOrCreate(['name' => 'subscriber']);
+        $memberRole = Role::firstOrCreate(['name' => 'member']);
+
 
         // Assign all permissions to the 'admin' role
         $adminRole->syncPermissions(Permission::all());

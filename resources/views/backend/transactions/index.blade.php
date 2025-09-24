@@ -71,12 +71,29 @@
                             </td>
                             <td>{{ $transaction->created_at->format('d M Y H:i') }}</td>
                             <td>
-                                <a href="{{ route('transactions.edit', $transaction->id) }}" class="btn btn-sm btn-info">Edit</a>
-                                <form action="{{ route('transactions.destroy', $transaction->id) }}" method="POST" style="display:inline-block;">
-                                    @csrf @method('DELETE')
-                                    <button type="submit" onclick="return confirm('Delete this transaction?')" class="btn btn-sm btn-danger">Delete</button>
-                                </form>
-                            </td>
+    <a href="{{ route('transactions.edit', $transaction->id) }}" class="btn btn-sm btn-info">Edit</a>
+    <form action="{{ route('transactions.destroy', $transaction->id) }}" method="POST" style="display:inline-block;">
+        @csrf @method('DELETE')
+        <button type="submit" onclick="return confirm('Delete this transaction?')" class="btn btn-sm btn-danger">Delete</button>
+    </form>
+
+    @if ($transaction->payment_status === 'DP')
+        <!-- Tombol Lunasi via Midtrans -->
+        <a href="{{ route('transactions.pay_remaining', $transaction->id) }}" 
+           class="btn btn-sm btn-primary mt-1">
+            Lunasi via Midtrans
+        </a>
+
+        <!-- Tombol Lunasi via Tunai -->
+        <form action="{{ route('transactions.cash_payment', $transaction->id) }}" method="POST" style="display:inline-block;">
+            @csrf
+            <button type="submit" class="btn btn-sm btn-success mt-1" onclick="return confirm('Yakin sudah menerima pelunasan tunai?')">
+                Lunasi Tunai
+            </button>
+        </form>
+    @endif
+</td>
+
                         </tr>
                     @endforeach
                 </tbody>

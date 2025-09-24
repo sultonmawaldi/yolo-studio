@@ -330,3 +330,96 @@ body {
         min-height: 400px;
     }
 }
+
+/* Fade in/out animasi dropdown */
+.animate-fade {
+    animation: fadeIn 0.3s ease-in-out;
+}
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Hover efek lebih modern */
+.dropdown-item:hover {
+    background: #f1f5f9; /* abu-abu soft */
+    border-radius: 8px;
+    transition: all 0.2s ease-in-out;
+}
+
+/* Fade in/out animasi dropdown */
+.animate-fade {
+    animation: fadeIn 0.3s ease-in-out;
+}
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Hover efek lebih modern */
+.dropdown-item:hover {
+    background: #f1f5f9; /* abu-abu soft */
+    border-radius: 8px;
+    transition: all 0.2s ease-in-out;
+}
+
+/* Dashboard Cards */
+.dashboard-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: #fff;
+    border-radius: 15px;
+    padding: 20px;
+    transition: all 0.3s ease;
+}
+.dashboard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.icon-box {
+    width: 55px;
+    height: 55px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.dashboard-card .card-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #6c757d;
+}
+
+.dashboard-card .card-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: #333;
+}
+
+/* Table Styling */
+.table-hover tbody tr:hover {
+    background-color: #f8f9fa;
+}
+.table thead th {
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 13px;
+    color: #495057;
+}

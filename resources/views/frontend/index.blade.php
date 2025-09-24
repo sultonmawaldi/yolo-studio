@@ -25,6 +25,7 @@
         {!! $setting->header !!}
     @endif
 
+
 </head>
 
 
@@ -40,20 +41,54 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
-                        @guest
-                            <li class="nav-item">
-                                <a class="nav-link active" href="{{ route('login') }}">Login</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('register') }}">Register</a>
-                            </li>
-                        @endguest
+                         @guest
+        <li class="nav-item">
+            <a class="nav-link active" href="{{ route('login') }}">Login</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('register') }}">Register</a>
+        </li>
+    @endguest
 
-                        @auth
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('dashboard') }}">Dashboard</a>
-                            </li>
-                        @endauth
+    {{-- Navbar Profile --}}
+@auth
+<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#" id="navbarProfileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <img src="{{ Auth::user()->profile_picture ?? 'https://ui-avatars.com/api/?name=' . urlencode(Auth::user()->name) }}" 
+             alt="Avatar" 
+             class="rounded-circle border border-2" 
+             width="32" height="32">
+        <span class="fw-semibold">{{ Auth::user()->name }}</span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-3 animate-fade" aria-labelledby="navbarProfileDropdown">
+        <li>
+            <a class="dropdown-item d-flex align-items-center py-2" href="{{ route('member.dashboard') }}">
+                <i class="bi bi-speedometer2 me-2 text-primary"></i> Dashboard
+            </a>
+        </li>
+
+        {{-- ❌ Hilangkan Profile Settings untuk admin/moderator/employee --}}
+        @if(!Auth::user()->hasAnyRole(['admin', 'moderator', 'employee']))
+        <li>
+            <a class="dropdown-item d-flex align-items-center py-2" href="{{ route('member.profile') }}">
+                <i class="bi bi-gear me-2 text-success"></i> Profile Settings
+            </a>
+        </li>
+        @endif
+
+        <li><hr class="dropdown-divider"></li>
+        <li>
+            <form action="{{ route('logout') }}" method="POST" class="m-0">
+                @csrf
+                <button type="submit" class="dropdown-item d-flex align-items-center py-2 text-danger">
+                    <i class="bi bi-box-arrow-right me-2"></i> Logout
+                </button>
+            </form>
+        </li>
+    </ul>
+</li>
+@endauth
+
 
                     </ul>
                 </div>
@@ -281,15 +316,24 @@
     
 
     <!-- Kupon -->
-    <div class="mb-4">
-      <label for="coupon-code" class="form-label fw-semibold">Kode Kupon:</label>
-      <div class="input-group">
-        <input type="text" class="form-control" id="coupon-code" placeholder="Masukkan kode kupon">
-        <button class="btn btn-primary" type="button" id="apply-coupon">Gunakan</button>
-      </div>
-      <div class="form-text text-success d-none" id="coupon-success-msg">Kupon berhasil diterapkan!</div>
-      <div class="form-text text-danger d-none" id="coupon-error-msg">Kupon tidak valid.</div>
-    </div>
+<div class="mb-4">
+  <label for="coupon-code" class="form-label fw-semibold">Kode Kupon:</label>
+  <div class="input-group">
+    <input type="text" class="form-control" id="coupon-code" placeholder="Masukkan kode kupon">
+    <button class="btn btn-primary" type="button" id="apply-coupon">Gunakan</button>
+  </div>
+
+  <!-- hidden input untuk dikirim ke backend -->
+  <input type="hidden" name="coupon_id" id="coupon_id">
+
+  <div class="form-text text-success d-none" id="coupon-success-msg">
+    Kupon berhasil diterapkan!
+  </div>
+  <div class="form-text text-danger d-none" id="coupon-error-msg">
+    Kupon tidak valid.
+  </div>
+</div>
+
 
     <!-- Ringkasan Pembayaran -->
     <div id="payment-summary" class="border-top pt-3">
@@ -326,39 +370,98 @@
 
 
 <!-- Informasi Pelanggan -->
-<div class="card shadow-sm border-0">
-  <div class="card-header bg-white border-bottom">
-    <h5 class="mb-0 fw-semibold"><i class="bi bi-person-lines-fill me-2"></i> Informasi Anda</h5>
-  </div>
-  <div class="card-body">
-    <form id="customer-info-form">
-      @csrf
-      <input type="hidden" id="total_amount" name="total_amount" value="0">
-    <input type="hidden" id="payment_status" name="payment_status" value="">
-    <input type="hidden" id="midtrans_order_id" name="midtrans_order_id" value="">
-      <div class="row g-3">
-        <div class="col-md-6">
-          <label for="customer-name" class="form-label">Nama Lengkap</label>
-          <input type="text" class="form-control" id="customer-name" placeholder="Nama Anda" required>
+@auth
+    @if(Auth::user()->hasAnyRole(['admin','moderator','employee']))
+        <!-- Admin / Moderator / Employee: tampilkan form untuk input data pelanggan -->
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white border-bottom">
+                <h5 class="mb-0 fw-semibold">
+                    <i class="bi bi-person-lines-fill me-2"></i> Informasi Pelanggan
+                </h5>
+            </div>
+            <div class="card-body">
+                <form id="customer-info-form">
+                    @csrf
+                    <input type="hidden" id="total_amount" name="total_amount" value="0">
+                    <input type="hidden" id="payment_status" name="payment_status" value="">
+                    <input type="hidden" id="midtrans_order_id" name="midtrans_order_id" value="">
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="customer-name" class="form-label">Nama Lengkap</label>
+                            <input type="text" class="form-control" id="customer-name" name="name" placeholder="Nama pelanggan" value="{{ old('name') }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="customer-email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="customer-email" name="email" placeholder="email@domain.com" value="{{ old('email') }}" required>
+                        </div>
+                        <div class="col-md-12">
+                            <label for="customer-phone" class="form-label">Nomor HP/WhatsApp</label>
+                            <input type="tel" class="form-control" id="customer-phone" name="phone" placeholder="08xxxxxxxxxx" value="{{ old('phone') }}" required>
+                        </div>
+                        <div class="col-12">
+                            <label for="customer-notes" class="form-label">Catatan (Opsional)</label>
+                            <textarea class="form-control" id="customer-notes" name="notes" rows="3" placeholder="Tulis catatan jika ada...">{{ old('notes') }}</textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
-        <div class="col-md-6">
-          <label for="customer-email" class="form-label">Email</label>
-          <input type="email" class="form-control" id="customer-email" placeholder="email@domain.com" required>
+
+    @else
+        <!-- Authenticated but not admin/moderator/employee (=> member): hidden inputs -->
+        <form id="customer-info-form" class="d-none">
+            @csrf
+            <input type="hidden" id="total_amount" name="total_amount" value="0">
+            <input type="hidden" id="payment_status" name="payment_status" value="">
+            <input type="hidden" id="midtrans_order_id" name="midtrans_order_id" value="">
+
+            <input type="hidden" id="customer-name" value="{{ auth()->user()->name }}">
+            <input type="hidden" id="customer-email" value="{{ auth()->user()->email }}">
+            <input type="hidden" id="customer-phone" value="{{ auth()->user()->phone ?? '' }}">
+            <input type="hidden" id="customer-notes" value="">
+        </form>
+    @endif
+@else
+    <!-- Guest: tampilkan form input pelanggan -->
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-white border-bottom">
+            <h5 class="mb-0 fw-semibold">
+                <i class="bi bi-person-lines-fill me-2"></i> Informasi Anda
+            </h5>
         </div>
-        <div class="col-md-12">
-          <label for="customer-phone" class="form-label">Nomor HP/WhatsApp</label>
-          <input type="tel" class="form-control" id="customer-phone" placeholder="08xxxxxxxxxx" required>
+        <div class="card-body">
+            <form id="customer-info-form">
+                @csrf
+                <input type="hidden" id="total_amount" name="total_amount" value="0">
+                <input type="hidden" id="payment_status" name="payment_status" value="">
+                <input type="hidden" id="midtrans_order_id" name="midtrans_order_id" value="">
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="customer-name" class="form-label">Nama Lengkap</label>
+                        <input type="text" class="form-control" id="customer-name" name="name" placeholder="Nama Anda" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="customer-email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="customer-email" name="email" placeholder="email@domain.com" required>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="customer-phone" class="form-label">Nomor HP/WhatsApp</label>
+                        <input type="tel" class="form-control" id="customer-phone" name="phone" placeholder="08xxxxxxxxxx" required>
+                    </div>
+                    <div class="col-12">
+                        <label for="customer-notes" class="form-label">Catatan (Opsional)</label>
+                        <textarea class="form-control" id="customer-notes" name="notes" rows="3" placeholder="Tulis catatan jika ada..."></textarea>
+                    </div>
+                </div>
+            </form>
         </div>
-        <div class="col-12">
-          <label for="customer-notes" class="form-label">Catatan (Opsional)</label>
-          <textarea class="form-control" id="customer-notes" rows="3" placeholder="Tulis catatan jika ada..."></textarea>
-        </div>
-      </div>
-    </form>
-  </div>
+    </div>
+@endauth
 </div>
 </div>
-</div>
+
 
 <!-- Booking Footer -->
 <div class="booking-footer mt-4 d-flex justify-content-between">
@@ -1268,36 +1371,91 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // function submitBooking() {
 
-            function submitBooking() {
+           // ✅ Dummy function supaya tidak error 
+function updateBookingSummary() {
+    console.log("updateBookingSummary dipanggil");
+}
+
+// ✅ Simpan booking ke server
+function saveBooking(data) {
+    $.ajax({
+        url: '/bookings',
+        method: 'POST',
+        data: data,
+        success: function(res) {
+            // ✅ tampilkan modal sukses
+            $('#bookingSuccessModal').modal('show');
+
+            // isi detail booking di modal
+            $('#modal-booking-details').html(`
+                <ul class="list-unstyled">
+                    <li><strong>Nama:</strong> ${data.name}</li>
+                    <li><strong>Email:</strong> ${data.email}</li>
+                    <li><strong>Telepon:</strong> ${data.phone}</li>
+                    <li><strong>Tanggal:</strong> ${data.booking_date}</li>
+                    <li><strong>Jam:</strong> ${data.booking_time}</li>
+                    <li><strong>Total:</strong> Rp${parseInt(data.total_amount).toLocaleString()}</li>
+                    <li><strong>Status:</strong> ${data.status}</li>
+                    <li><strong>Metode Bayar:</strong> ${data.payment_method}</li>
+                    <li><strong>Payment Status:</strong> ${data.payment_status}</li>
+                </ul>
+            `);
+
+            // ✅ redirect setelah modal ditutup
+            $('#bookingSuccessModal').on('hidden.bs.modal', function () {
+                let redirectUrl = '/'; // default guest
+
+                if (typeof currentAuthUser !== 'undefined' && currentAuthUser) {
+                    if (currentAuthUser.role === 'member') {
+                        redirectUrl = '/member/dashboard';
+                    } else if (
+                        currentAuthUser.role === 'admin' ||
+                        currentAuthUser.role === 'moderator' ||
+                        currentAuthUser.role === 'employee'
+                    ) {
+                        redirectUrl = '/dashboard';
+                    }
+                }
+
+                window.location.href = redirectUrl;
+            });
+        },
+        error: function(xhr) {
+            console.error(xhr.responseJSON);
+            alert('Booking gagal. Hubungi support.');
+            $("#next-step").prop('disabled', false).html('Confirm Booking <i class="bi bi-check-circle"></i>');
+        }
+    });
+}
+
+// ✅ Submit booking
+function submitBooking() {
     const form = $('#customer-info-form');
     const csrfToken = form.find('input[name="_token"]').val();
 
-    // Ambil metode pembayaran (dp/cash)
-    const paymentMethod = $('#payment-method').val();
+    // 🔹 ambil metode pembayaran dari input form
+    const paymentMethod = $('#payment-method').val(); // dp / full
     const totalAmount = parseInt(document.getElementById("summary-price").textContent.replace(/[^0-9]/g, ''), 10);
 
-    // DP sesuai service, fallback 50% jika tidak ada
     const dpAmount = bookingState.selectedService.dp_amount || Math.round(totalAmount / 2);
     const paymentAmount = paymentMethod === 'dp' ? dpAmount : totalAmount;
 
-    const bookingData = {
+    let bookingData = {
         employee_id: bookingState.selectedEmployee.id,
         service_id: bookingState.selectedService.id,
         name: $('#customer-name').val(),
         email: $('#customer-email').val(),
         phone: $('#customer-phone').val(),
         notes: $('#customer-notes').val(),
-        amount: paymentAmount,          // jumlah bayar sekarang
-        total_amount: totalAmount,      // total booking
+        amount: paymentAmount,
+        total_amount: totalAmount,
         people_count: parseInt(document.getElementById("people-count").textContent, 10),
         booking_date: bookingState.selectedDate,
         booking_time: bookingState.selectedTime.start || bookingState.selectedTime,
-        status: 'Pending',              // booking status awal
-        payment_method: 'Midtrans',
-        payment_status: paymentMethod === 'dp' ? 'DP' : 'Pending', 
         _token: csrfToken
     };
 
+    // Tambahkan user_id kalau login
     if (typeof currentAuthUser !== 'undefined' && currentAuthUser) {
         bookingData.user_id = currentAuthUser.id;
     }
@@ -1305,63 +1463,75 @@ document.addEventListener("DOMContentLoaded", function () {
     const nextBtn = $("#next-step");
     nextBtn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span> Processing...');
 
-    // 1️⃣ Dapatkan Snap Token dari server
-    $.ajax({
-        url: '/midtrans/token',
-        method: 'POST',
-        data: bookingData,
-        success: function(response) {
-            const snapToken = response.token;
+    // 🔹 Jika role = admin/moderator/employee → langsung simpan booking (cash/manual)
+    if (typeof currentAuthUser !== 'undefined' && currentAuthUser &&
+        (currentAuthUser.role === 'admin' || currentAuthUser.role === 'moderator' || currentAuthUser.role === 'employee')) {
 
-            // 2️⃣ Snap Popup
-            snap.pay(snapToken, {
-                onSuccess: function(result) {
-                    bookingData.payment_result = JSON.stringify(result);
-                    bookingData.midtrans_order_id = result.order_id || result.transaction_id;
-                    bookingData.payment_status = paymentMethod === 'dp' ? 'DP' : 'Paid';
+        bookingData.payment_method = 'Cash'; // Manual
 
-                    saveBooking(bookingData);
-                },
-                onPending: function(result) {
-                    bookingData.payment_result = JSON.stringify(result);
-                    bookingData.midtrans_order_id = result.order_id || result.transaction_id;
-                    bookingData.payment_status = 'Pending';
-
-                    saveBooking(bookingData);
-                },
-                onError: function() {
-                    alert('Payment failed. Please try again.');
-                    nextBtn.prop('disabled', false).html('Confirm Booking <i class="bi bi-check-circle"></i>');
-                },
-                onClose: function() {
-                    alert('Payment popup closed. Booking is cancelled.');
-                    nextBtn.prop('disabled', false).html('Confirm Booking <i class="bi bi-check-circle"></i>');
-                }
-            });
-        },
-        error: function() {
-            alert('Failed to initiate payment.');
-            nextBtn.prop('disabled', false).html('Confirm Booking <i class="bi bi-check-circle"></i>');
+        if (paymentMethod === 'dp') {
+            bookingData.payment_status = 'DP';
+            bookingData.status = 'Confirmed';
+        } else {
+            bookingData.payment_status = 'Paid';
+            bookingData.status = 'Confirmed';
         }
-    });
+
+        saveBooking(bookingData);
+        return;
+    }
+
+    // 🔹 Jika role = member atau guest → pakai Midtrans
+    bookingData.payment_method = 'Midtrans';
+    bookingData.status = 'Confirmed';
+    bookingData.payment_status = (paymentMethod === 'dp') ? 'DP' : 'Paid';
+
+    if (typeof snap !== 'undefined') {
+        $.ajax({
+            url: '/midtrans/token',
+            method: 'POST',
+            data: bookingData,
+            success: function(response) {
+                const snapToken = response.token;
+
+                snap.pay(snapToken, {
+                    onSuccess: function(result) {
+                        bookingData.payment_result = JSON.stringify(result);
+                        bookingData.midtrans_order_id = result.order_id || result.transaction_id;
+                        saveBooking(bookingData);
+                    },
+                    onPending: function(result) {
+                        bookingData.payment_result = JSON.stringify(result);
+                        bookingData.midtrans_order_id = result.order_id || result.transaction_id;
+                        bookingData.status = 'Processing';
+                        bookingData.payment_status = (paymentMethod === 'dp') ? 'DP' : 'Pending';
+                        saveBooking(bookingData);
+                    },
+                    onError: function() {
+                        alert('Payment failed. Please try again.');
+                        nextBtn.prop('disabled', false).html('Confirm Booking <i class="bi bi-check-circle"></i>');
+                    },
+                    onClose: function() {
+                        alert('Payment popup closed. Booking is cancelled.');
+                        nextBtn.prop('disabled', false).html('Confirm Booking <i class="bi bi-check-circle"></i>');
+                    }
+                });
+            },
+            error: function() {
+                alert('Failed to initiate payment.');
+                nextBtn.prop('disabled', false).html('Confirm Booking <i class="bi bi-check-circle"></i>');
+            }
+        });
+    } else {
+        alert("Midtrans Snap belum diload. Pastikan script Snap sudah ditambahkan.");
+        nextBtn.prop('disabled', false).html('Confirm Booking <i class="bi bi-check-circle"></i>');
+    }
 }
 
-// 3️⃣ Simpan booking dan transaction
-function saveBooking(data) {
-    $.ajax({
-        url: '/bookings',
-        method: 'POST',
-        data: data,
-        success: function(res) {
-            window.location.href = '/transactions';
-        },
-        error: function(xhr) {
-            console.log(xhr.responseJSON);
-            alert('Booking failed. Please contact support.');
-            $("#next-step").prop('disabled', false).html('Confirm Booking <i class="bi bi-check-circle"></i>');
-        }
-    });
-}
+
+
+
+
 
 
         });
@@ -1371,80 +1541,75 @@ function saveBooking(data) {
         {!! $setting->footer !!}
     @endif
 <script>
-  const summaryPriceEl = document.getElementById("summary-price");
-  const originalPriceEl = document.getElementById("original-price");
-  const finalPriceEl = document.getElementById("final-price");
-  const discountRow = document.getElementById("discount-row");
+  const summaryPriceEl   = document.getElementById("summary-price");
+  const originalPriceEl  = document.getElementById("original-price");
+  const finalPriceEl     = document.getElementById("final-price");
+  const discountRow      = document.getElementById("discount-row");
   const discountAmountEl = document.getElementById("discount-amount");
 
-  const dpRow = document.getElementById("dp-row");
-  const sisaRow = document.getElementById("sisa-row");
-  const dpAmountEl = document.getElementById("dp-amount");
-  const sisaPaymentEl = document.getElementById("sisa-payment");
+  const dpRow        = document.getElementById("dp-row");
+  const sisaRow      = document.getElementById("sisa-row");
+  const dpAmountEl   = document.getElementById("dp-amount");
+  const sisaPaymentEl= document.getElementById("sisa-payment");
 
-  const paymentMethodEl = document.getElementById("payment-method");
-  const couponInput = document.getElementById("coupon-code");
-  const applyCouponBtn = document.getElementById("apply-coupon");
+  const paymentMethodEl  = document.getElementById("payment-method");
+  const couponInput      = document.getElementById("coupon-code");
+  const applyCouponBtn   = document.getElementById("apply-coupon");
   const couponSuccessMsg = document.getElementById("coupon-success-msg");
-  const couponErrorMsg = document.getElementById("coupon-error-msg");
+  const couponErrorMsg   = document.getElementById("coupon-error-msg");
+  const couponIdHidden   = document.getElementById("coupon_id");
 
-  let basePrice = 0;         // Harga asli, di-set dari server atau hasil kalkulasi
-  let discountValue = 0;     // Nilai diskon kupon
+  let basePrice = 0;         
+  let discountValue = 0;     
 
- function formatRupiah(number) {
-  return new Intl.NumberFormat('id-ID', {
-    style: 'currency',
-    currency: 'IDR',
-    minimumFractionDigits: 0,  // hilangkan desimal jika nol
-    maximumFractionDigits: 0
-  }).format(number);
-}
+  function formatRupiah(number) {
+    return new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(number);
+  }
 
   function updatePaymentSummary() {
-  let priceAfterDiscount = basePrice - discountValue;
-  if (priceAfterDiscount < 0) priceAfterDiscount = 0;
+    let priceAfterDiscount = basePrice - discountValue;
+    if (priceAfterDiscount < 0) priceAfterDiscount = 0;
 
-  originalPriceEl.textContent = formatRupiah(basePrice);
-  summaryPriceEl.textContent = formatRupiah(priceAfterDiscount);
+    originalPriceEl.textContent = formatRupiah(basePrice);
+    summaryPriceEl.textContent  = formatRupiah(priceAfterDiscount);
 
-  if (discountValue > 0) {
-    discountRow.classList.remove("d-none");
-    discountAmountEl.textContent = `- ${formatRupiah(discountValue)}`;
+    if (discountValue > 0) {
+      discountRow.classList.remove("d-none");
+      discountAmountEl.textContent = `- ${formatRupiah(discountValue)}`;
 
-    // Tampilkan baris total setelah diskon
-    finalPriceEl.textContent = formatRupiah(priceAfterDiscount);
-    finalPriceEl.parentElement.classList.remove("d-none");
-  } else {
-    discountRow.classList.add("d-none");
+      finalPriceEl.textContent = formatRupiah(priceAfterDiscount);
+      finalPriceEl.parentElement.classList.remove("d-none");
+    } else {
+      discountRow.classList.add("d-none");
+      finalPriceEl.parentElement.classList.add("d-none");
+    }
 
-    // Sembunyikan baris total setelah diskon jika tidak ada diskon
-    finalPriceEl.parentElement.classList.add("d-none");
+    const method = paymentMethodEl.value;
+    if (method === "dp") {
+      const dp   = window.dpAmount || Math.round(priceAfterDiscount / 2);
+      const sisa = priceAfterDiscount - dp;
+      dpRow.classList.remove("d-none");
+      sisaRow.classList.remove("d-none");
+      dpAmountEl.textContent   = formatRupiah(dp);
+      sisaPaymentEl.textContent= formatRupiah(sisa);
+    } else {
+      dpRow.classList.add("d-none");
+      sisaRow.classList.add("d-none");
+    }
   }
-
-  const method = paymentMethodEl.value;
-  if (method === "dp") {
-    const dp = window.dpAmount || Math.round(priceAfterDiscount / 2);
-    const sisa = priceAfterDiscount - dp;
-    dpRow.classList.remove("d-none");
-    sisaRow.classList.remove("d-none");
-    dpAmountEl.textContent = formatRupiah(dp);
-    sisaPaymentEl.textContent = formatRupiah(sisa);
-  } else {
-    dpRow.classList.add("d-none");
-    sisaRow.classList.add("d-none");
-  }
-}
-
 
   async function applyCoupon() {
     const code = couponInput.value.trim().toUpperCase();
-
     if (!code) {
       alert("Masukkan kode kupon!");
       return;
     }
 
-    // Reset pesan notifikasi
     couponSuccessMsg.classList.add("d-none");
     couponErrorMsg.classList.add("d-none");
 
@@ -1462,7 +1627,12 @@ function saveBooking(data) {
 
       const data = await response.json();
 
-      // Sesuaikan tipe kupon dari backend
+      // cek response dari backend
+      if (!data.id) {
+        throw new Error("Kupon tidak valid atau bukan milik Anda");
+      }
+
+      // hitung diskon
       if (data.type === "percent") {
         discountValue = Math.round(basePrice * (data.value / 100));
       } else if (data.type === "fixed") {
@@ -1471,18 +1641,24 @@ function saveBooking(data) {
         discountValue = 0;
       }
 
+      // set hidden coupon_id agar ikut ke form transaksi
+      couponIdHidden.value = data.id;
+
       couponSuccessMsg.classList.remove("d-none");
       couponErrorMsg.classList.add("d-none");
       updatePaymentSummary();
 
     } catch (error) {
+      couponIdHidden.value = ""; // reset kalau gagal
       couponSuccessMsg.classList.add("d-none");
       couponErrorMsg.classList.remove("d-none");
       console.error("Error validasi kupon:", error);
     }
   }
 
-  applyCouponBtn.addEventListener("click", applyCoupon);
+  if (applyCouponBtn) {
+    applyCouponBtn.addEventListener("click", applyCoupon);
+  }
 
   document.addEventListener("DOMContentLoaded", function () {
     const originalText = originalPriceEl.textContent.replace(/[^\d]/g, '');
@@ -1490,48 +1666,106 @@ function saveBooking(data) {
     updatePaymentSummary();
   });
 
-  // deklarasi variabel, fungsi formatRupiah(), updatePaymentSummary(), applyCoupon(), dll
+  if (paymentMethodEl) {
+    paymentMethodEl.addEventListener('change', () => {
+      couponInput.value = '';
+      discountValue = 0;
+      couponIdHidden.value = '';
+      couponSuccessMsg.classList.add('d-none');
+      couponErrorMsg.classList.add('d-none');
+      updatePaymentSummary();
+    });
+  }
 
-// Tambahkan listener perubahan metode pembayaran
-paymentMethodEl.addEventListener('change', () => {
-  couponInput.value = '';
-  discountValue = 0;
-  couponSuccessMsg.classList.add('d-none');
-  couponErrorMsg.classList.add('d-none');
-  updatePaymentSummary();
-});
-
-// Listener tombol apply kupon
-applyCouponBtn.addEventListener("click", applyCoupon);
-
-// Listener DOMContentLoaded
-document.addEventListener("DOMContentLoaded", function () {
-  const originalText = originalPriceEl.textContent.replace(/[^\d]/g, '');
-  basePrice = parseInt(originalText) || 0;
-  updatePaymentSummary();
-});
-
-const prevStepBtn = document.getElementById('prev-step');
-
-if (prevStepBtn) {
-  prevStepBtn.addEventListener('click', () => {
-    // Reset input kupon
-    couponInput.value = '';
-
-    // Reset diskon
-    discountValue = 0;
-
-    // Sembunyikan pesan sukses dan error kupon
-    couponSuccessMsg.classList.add('d-none');
-    couponErrorMsg.classList.add('d-none');
-
-    // Update tampilan ringkasan pembayaran
-    updatePaymentSummary();
-  });
-}
-
+  const prevStepBtn = document.getElementById('prev-step');
+  if (prevStepBtn) {
+    prevStepBtn.addEventListener('click', () => {
+      couponInput.value = '';
+      discountValue = 0;
+      couponIdHidden.value = '';
+      couponSuccessMsg.classList.add('d-none');
+      couponErrorMsg.classList.add('d-none');
+      updatePaymentSummary();
+    });
+  }
 </script>
 
+
+<script>
+    @if(auth()->check())
+        window.currentAuthUser = {
+            id: {{ auth()->user()->id }},
+            role: "{{ optional(auth()->user()->roles->first())->name ?? 'member' }}",
+            name: "{{ auth()->user()->name }}"
+        };
+    @else
+        window.currentAuthUser = null;
+    @endif
+</script>
+
+
 </body>
+
+@if (session('login_success'))
+    <!-- Toast Container -->
+    <div class="position-fixed top-0 end-0 p-3" style="z-index: 1080; max-width: 95%;">
+        <div id="loginToast" class="toast align-items-center text-white bg-success border-0 shadow-lg" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body fw-semibold">
+                    <i class="bi bi-check-circle-fill me-2"></i>
+                    {{ session('login_success') }}
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast JS with fade in/out -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const toastEl = document.getElementById('loginToast');
+            
+            // Tambahkan animasi fade
+            toastEl.classList.add('fade', 'show-toast');
+
+            const toast = new bootstrap.Toast(toastEl, { delay: 5000 });
+            toast.show();
+
+            // Bersihkan DOM setelah toast hilang
+            toastEl.addEventListener('hidden.bs.toast', function () {
+                toastEl.remove();
+            });
+        });
+    </script>
+
+    <!-- Custom CSS untuk fade in/out -->
+    <style>
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: translateY(-20%); }
+            10% { opacity: 1; transform: translateY(0); }
+            90% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-20%); }
+        }
+
+        .toast.show-toast {
+            animation: fadeInOut 5s ease-in-out forwards;
+        }
+
+        /* Responsive untuk mobile */
+        @media (max-width: 576px) {
+            .toast {
+                width: 100%;
+                min-width: 0;
+                border-radius: 0.5rem;
+            }
+            .position-fixed {
+                top: 1rem;
+                right: 0.5rem;
+                left: 0.5rem;
+            }
+        }
+    </style>
+@endif
+
 
 </html>
